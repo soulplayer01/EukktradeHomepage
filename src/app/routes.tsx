@@ -1,11 +1,11 @@
-import { createBrowserRouter, Navigate } from "react-router";
+import { createBrowserRouter } from "react-router";
 import { DesignSystemPage } from "./components/DesignSystemPage";
 import { Homepage } from "./components/Homepage";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <Navigate to="/design-system" replace />,
+    Component: Homepage,
   },
   {
     path: "/homepage",
