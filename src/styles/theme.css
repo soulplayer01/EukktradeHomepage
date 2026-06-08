@@ -2,7 +2,7 @@
 
 :root {
   --font-size: 16px;
-  --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-family: 'Inter', 'Noto Sans KR', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', 'Menlo', monospace;
   --background: #f8f8f9;
   --foreground: #0f0f11;

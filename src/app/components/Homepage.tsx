@@ -10,11 +10,13 @@ import {
   Layers3,
   ListChecks,
   Server,
-  ShieldCheck,
+  Github,
   Terminal,
   TestTube2,
 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router";
+import logoImage from "../../imports/image.png";
 
 const guideItems = [
   { label: "Installation Guide", href: "#installation-guide" },
@@ -123,100 +125,126 @@ function SectionHeading({ eyebrow, title, copy }: { eyebrow: string; title: stri
   );
 }
 
-function GlobalNavigation() {
+function GlobalNavigation({ isHeroVisible }: { isHeroVisible: boolean }) {
+  const navTextClass = isHeroVisible ? "text-white/76 hover:bg-white/8 hover:text-white" : "text-[#2f5b42] hover:bg-emerald-500/12 hover:text-[#052014]";
+  const dropdownClass = isHeroVisible
+    ? "border-white/10 bg-[#111113]/95 text-white shadow-[0_24px_90px_rgba(0,0,0,0.34)]"
+    : "border-border bg-popover/95 text-popover-foreground shadow-[0_24px_90px_rgba(16,184,90,0.16)]";
+  const dropdownItemClass = isHeroVisible ? "text-white/78 hover:bg-white/8 hover:text-white" : "text-popover-foreground hover:bg-accent";
+
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-emerald-900/10 bg-background/70 backdrop-blur-xl supports-[backdrop-filter]:bg-background/62">
+    <header
+      className={`fixed inset-x-0 top-0 z-50 [transition:all_300ms_ease] ${
+        isHeroVisible
+          ? "border-b border-transparent bg-transparent"
+          : "border-b border-emerald-900/10 bg-[#eefcf1]/82 backdrop-blur-xl supports-[backdrop-filter]:bg-[#eefcf1]/72"
+      }`}
+    >
       <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 md:px-8">
         <Link to="/homepage" className="flex items-center gap-3" aria-label="EUKK TRADE Homepage">
-          <span className="flex h-8 w-8 items-center justify-center rounded-md border border-emerald-700/20 bg-emerald-500/20 text-[11px] font-bold tracking-[-0.04em] shadow-[0_8px_30px_rgba(16,184,90,0.2)]">ET</span>
-          <span className="text-sm font-bold tracking-[-0.02em]">EUKK TRADE</span>
+          <span
+            className={`flex h-8 w-8 items-center justify-center rounded-md text-[11px] font-bold tracking-[-0.04em] shadow-[0_8px_30px_rgba(16,184,90,0.2)] [transition:all_300ms_ease] ${
+              isHeroVisible ? "border border-white/14 bg-white/10 text-white" : "border border-emerald-700/20 bg-emerald-500/20 text-[#052014]"
+            }`}
+          >
+            ET
+          </span>
+          <span className={`text-sm font-bold tracking-[-0.02em] [transition:all_300ms_ease] ${isHeroVisible ? "text-white" : "text-[#052014]"}`}>EUKK TRADE</span>
         </Link>
         <div className="hidden items-center gap-1 md:flex">
-          <a href="#overview" className="rounded-md px-3 py-2 text-sm text-muted-foreground transition hover:bg-emerald-500/12 hover:text-foreground">프로젝트 소개</a>
-          <a href="#status" className="rounded-md px-3 py-2 text-sm text-muted-foreground transition hover:bg-emerald-500/12 hover:text-foreground">개발 현황</a>
+          <a href="#overview" className={`rounded-md px-3 py-2 text-sm [transition:all_300ms_ease] ${navTextClass}`}>프로젝트 소개</a>
+          <a href="#status" className={`rounded-md px-3 py-2 text-sm [transition:all_300ms_ease] ${navTextClass}`}>개발 현황</a>
           <div className="group relative">
-            <button className="flex items-center gap-1 rounded-md px-3 py-2 text-sm text-muted-foreground transition hover:bg-emerald-500/12 hover:text-foreground">
+            <button className={`flex items-center gap-1 rounded-md px-3 py-2 text-sm [transition:all_300ms_ease] ${navTextClass}`}>
               가이드 <ChevronDown className="h-3.5 w-3.5 transition group-hover:rotate-180" />
             </button>
-            <div className="invisible absolute right-0 top-full w-64 translate-y-2 rounded-lg border border-border bg-popover/95 p-2 opacity-0 shadow-[0_24px_90px_rgba(16,184,90,0.16)] backdrop-blur-xl transition group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+            <div className={`invisible absolute right-0 top-full w-64 translate-y-2 rounded-lg border p-2 opacity-0 backdrop-blur-xl [transition:all_300ms_ease] group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 ${dropdownClass}`}>
               {guideItems.map((item) =>
                 item.href.startsWith("/") ? (
-                  <Link key={item.label} to={item.href} className="flex items-center justify-between rounded-md px-3 py-3 text-sm text-popover-foreground hover:bg-accent">
-                    {item.label}<ArrowRight className="h-3.5 w-3.5 text-muted-foreground" />
+                  <Link key={item.label} to={item.href} className={`flex items-center justify-between rounded-md px-3 py-3 text-sm [transition:all_300ms_ease] ${dropdownItemClass}`}>
+                    {item.label}<ArrowRight className={`h-3.5 w-3.5 ${isHeroVisible ? "text-white/46" : "text-muted-foreground"}`} />
                   </Link>
                 ) : (
-                  <a key={item.label} href={item.href} className="flex items-center justify-between rounded-md px-3 py-3 text-sm text-popover-foreground hover:bg-accent">
-                    {item.label}<ArrowRight className="h-3.5 w-3.5 text-muted-foreground" />
+                  <a key={item.label} href={item.href} className={`flex items-center justify-between rounded-md px-3 py-3 text-sm [transition:all_300ms_ease] ${dropdownItemClass}`}>
+                    {item.label}<ArrowRight className={`h-3.5 w-3.5 ${isHeroVisible ? "text-white/46" : "text-muted-foreground"}`} />
                   </a>
                 )
               )}
             </div>
           </div>
-          <a href="#support" className="rounded-md px-3 py-2 text-sm text-muted-foreground transition hover:bg-emerald-500/12 hover:text-foreground">지원</a>
+          <a href="#support" className={`rounded-md px-3 py-2 text-sm [transition:all_300ms_ease] ${navTextClass}`}>지원</a>
         </div>
-        <a href="#guides" className="rounded-md border border-border bg-secondary px-4 py-2 text-sm font-medium text-secondary-foreground transition hover:bg-accent">문서 보기</a>
+        <a
+          href="#guides"
+          className={`rounded-md border px-4 py-2 text-sm font-medium [transition:all_300ms_ease] ${
+            isHeroVisible ? "border-white/16 bg-white/8 text-white hover:bg-white/14" : "border-border bg-secondary text-secondary-foreground hover:bg-accent"
+          }`}
+        >
+          문서 보기
+        </a>
       </nav>
     </header>
   );
 }
 
 export function Homepage() {
+  const [isHeroVisible, setIsHeroVisible] = useState(true);
+
+  useEffect(() => {
+    const hero = document.getElementById("hero");
+
+    if (!hero || !("IntersectionObserver" in window)) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsHeroVisible(entry.isIntersecting);
+      },
+      {
+        root: null,
+        rootMargin: "-64px 0px 0px 0px",
+        threshold: 0,
+      }
+    );
+
+    observer.observe(hero);
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <main className="min-h-screen bg-[#eefcf1] text-[#052014] [--background:#eefcf1] [--foreground:#052014] [--card:#fbfff9] [--card-foreground:#052014] [--popover:#fbfff9] [--popover-foreground:#052014] [--primary:#10b85a] [--primary-foreground:#ffffff] [--secondary:#dff8e7] [--secondary-foreground:#07351f] [--muted:#c9f1d7] [--muted-foreground:#2f5b42] [--accent:#b9f6c9] [--accent-foreground:#07351f] [--border:oklch(0.72_0.08_145_/_0.38)] [--ring:oklch(0.68_0.19_148_/_0.42)]">
-      <GlobalNavigation />
+      <GlobalNavigation isHeroVisible={isHeroVisible} />
 
-      <section className="relative flex min-h-[640px] items-center overflow-hidden pt-16 md:min-h-[700px]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(74,222,128,0.38),transparent_30%),radial-gradient(circle_at_78%_20%,rgba(16,185,129,0.28),transparent_32%),linear-gradient(135deg,#f3fff4_0%,#dbfbe4_48%,#f7fff8_100%)]" />
-        <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-white/55 to-transparent" />
-        <div className="absolute right-[-7rem] top-24 hidden h-[420px] w-[680px] rotate-[-8deg] rounded-[2rem] border border-emerald-900/10 bg-white/45 shadow-[0_24px_90px_rgba(16,184,90,0.16)] backdrop-blur md:block">
-          <div className="grid h-full grid-cols-[1.1fr_0.9fr] gap-4 p-6">
-            <div className="rounded-xl border border-emerald-900/10 bg-white/55 p-5">
-              <div className="mb-5 flex items-center justify-between">
-                <span className="font-mono text-[10px] uppercase tracking-widest text-emerald-800/70">development status</span>
-                <span className="h-2 w-2 rounded-full bg-emerald-500" />
-              </div>
-              <div className="space-y-4">
-                {statusItems.map((item) => (
-                  <div key={item.title}>
-                    <div className="mb-1 flex justify-between font-mono text-[10px] uppercase tracking-widest text-emerald-900/60">
-                      <span>{item.title}</span>
-                      <span>{item.value}</span>
-                    </div>
-                    <div className="h-2 rounded-full bg-emerald-500/20">
-                      <div className="h-full rounded-full bg-emerald-500/70" style={{ width: item.value }} />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="rounded-xl border border-emerald-900/10 bg-white/45 p-5">
-              <div className="font-mono text-[10px] uppercase tracking-widest text-emerald-800/70">portal index</div>
-              <div className="mt-6 space-y-3">
-                {["Project Overview", "Development Status", "Guides", "Support"].map((item) => (
-                  <div key={item} className="rounded-md border border-emerald-900/10 bg-emerald-500/12 px-3 py-3 text-xs">{item}</div>
-                ))}
-              </div>
-            </div>
-          </div>
+      <section id="hero" className="relative min-h-screen overflow-hidden bg-[#08080a] px-5 py-24 text-[#f8f8f9] md:px-8">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_24%,rgba(16,184,90,0.18),transparent_34%),linear-gradient(180deg,#08080a_0%,#0b1110_58%,#08080a_100%)]" />
+        <div className="relative z-10 mx-auto flex min-h-[calc(100vh-12rem)] w-full max-w-3xl -translate-y-8 flex-col items-center justify-center text-center md:-translate-y-12">
+          <img
+            src={logoImage}
+            alt="EUKK TRADE"
+            className="h-24 w-24 rounded-lg object-contain shadow-[0_22px_70px_rgba(16,184,90,0.22)] md:h-28 md:w-28"
+          />
+          <h1 className="mt-10 text-4xl font-semibold leading-none text-[#f8f8f9] md:text-6xl">EUKK TRADE</h1>
+          <p className="mt-4 font-mono text-sm text-[#8c8c99] md:text-base">ver 1.0.0</p>
+          <a
+            href="https://github.com/OverDlive/AutoTrading"
+            target="_blank"
+            rel="noreferrer"
+            className="mt-10 inline-flex h-12 items-center justify-center gap-2 rounded-md bg-[#f8f8f9] px-6 text-sm font-medium text-[#08080a] shadow-[0_18px_50px_rgba(255,255,255,0.08)] transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/70 md:h-[52px] md:px-7 md:text-base"
+          >
+            <Github className="h-4 w-4 md:h-5 md:w-5" aria-hidden="true" />
+            GitHub에서 다운로드
+          </a>
+          <p className="mt-5 text-sm leading-6 text-[#8c8c99] md:text-[15px]">현재 Windows와 macOS에서 사용 가능합니다</p>
         </div>
-        <div className="relative z-10 mx-auto w-full max-w-7xl px-5 py-20 md:px-8">
-          <div className="max-w-3xl">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-900/10 bg-emerald-500/12 px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.16em] text-emerald-900/70 backdrop-blur">
-              <ShieldCheck className="h-3.5 w-3.5" /> Official Project Portal
-            </div>
-            <h1 className="text-5xl font-semibold leading-[0.95] tracking-[-0.065em] md:text-7xl">EUKK TRADE</h1>
-            <p className="mt-7 max-w-2xl text-lg leading-8 text-emerald-950/70 md:text-xl">
-              일목균형표 기반 주식 자동매매 프로젝트의 소개, 개발 현황, 가이드 문서, 지원 정보를 연결하는 공식 포털입니다.
-            </p>
-            <div className="mt-9 flex flex-wrap gap-3">
-              <a href="#status" className="inline-flex h-11 items-center gap-2 rounded-md bg-primary px-5 text-sm font-medium text-primary-foreground transition hover:opacity-90">
-                개발 현황 보기 <ArrowRight className="h-4 w-4" />
-              </a>
-              <a href="#guides" className="inline-flex h-11 items-center gap-2 rounded-md border border-border bg-secondary px-5 text-sm font-medium text-secondary-foreground transition hover:bg-accent">
-                가이드 문서
-              </a>
-            </div>
-          </div>
+        <div className="absolute inset-x-0 bottom-8 z-10 mx-auto max-w-5xl px-5 text-center md:bottom-12 md:px-8">
+          <h2 className="text-3xl font-extrabold leading-tight text-[#f8f8f9] md:text-5xl">
+            일목균형표 기반의 자동매매기를 경험해보세요
+          </h2>
+          <p className="mt-5 whitespace-pre-line text-lg font-extrabold leading-8 text-[#f8f8f9]/55 md:text-2xl md:leading-9">
+            {"백테스팅부터 자동 매매까지,\n더 쉽고 직관적으로."}
+          </p>
         </div>
       </section>
 
