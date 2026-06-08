@@ -1,27 +1,38 @@
 import {
   ArrowDown,
   ArrowRight,
-  BookOpen,
-  CheckCircle2,
   ChevronDown,
-  Code2,
   FileText,
-  GitBranch,
   Headphones,
-  Layers3,
-  ListChecks,
-  Server,
   Github,
-  Terminal,
-  TestTube2,
+  LockKeyhole,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router";
 
 const guideItems = [
-  { label: "Installation Guide", description: "설치 및 초기 세팅 가이드", href: "#installation-guide", icon: Terminal },
-  { label: "Development Guide", description: "개발 구조와 구현 규칙", href: "#development-guide", icon: Code2 },
-  { label: "Design Guide", description: "UI 컴포넌트와 디자인 시스템", href: "/design-system", icon: BookOpen },
+  { label: "설치 가이드", href: "/developers#installation-guide" },
+  { label: "개발 가이드", href: "/developers#development-guide" },
+  { label: "디자인 가이드", href: "/developers#design-guide" },
+];
+
+const githubDownloadUrl = "https://github.com/OverDlive/AutoTrading-releases";
+
+const heroBackgroundWords = [
+  { text: "ICHIMOKU", className: "left-[-8%] top-[15%] text-[clamp(4.5rem,12vw,10rem)] motion-safe:animate-[heroFloat_18s_ease-in-out_infinite]" },
+  { text: "BACKTEST", className: "right-[-9%] top-[26%] hidden text-[clamp(4rem,10vw,8.5rem)] motion-safe:animate-[heroFloat_22s_ease-in-out_infinite_reverse] sm:block" },
+  { text: "AUTO TRADE", className: "bottom-[20%] left-[4%] hidden text-[clamp(3.5rem,9vw,8rem)] motion-safe:animate-[heroFloat_20s_ease-in-out_infinite] md:block" },
+  { text: "STRATEGY", className: "bottom-[8%] right-[2%] hidden text-[clamp(3rem,8vw,7rem)] motion-safe:animate-[heroFloat_24s_ease-in-out_infinite_reverse] lg:block" },
+];
+
+const heroCodeFragments = [
+  { text: "strategy.signal()", className: "left-[9%] top-[33%] hidden md:block motion-safe:animate-[heroDrift_15s_ease-in-out_infinite]" },
+  { text: "backtest.run()", className: "right-[12%] top-[42%] hidden lg:block motion-safe:animate-[heroDrift_18s_ease-in-out_infinite_reverse]" },
+  { text: "execute.order()", className: "bottom-[27%] right-[18%] hidden md:block motion-safe:animate-[heroDrift_17s_ease-in-out_infinite]" },
+  { text: "cloud.spanA", className: "left-[16%] bottom-[36%] hidden sm:block motion-safe:animate-[heroDrift_19s_ease-in-out_infinite_reverse]" },
+  { text: "cloud.spanB", className: "right-[24%] bottom-[18%] hidden lg:block motion-safe:animate-[heroDrift_16s_ease-in-out_infinite]" },
+  { text: "status: ready", className: "left-[8%] bottom-[17%] hidden md:block motion-safe:animate-[heroPulse_7s_ease-in-out_infinite]" },
+  { text: "market.open()", className: "right-[8%] top-[62%] hidden sm:block motion-safe:animate-[heroPulse_8s_ease-in-out_infinite]" },
 ];
 
 const sectionShortcuts = [
@@ -57,89 +68,66 @@ function mixRgb(from: ReturnType<typeof hexToRgb>, to: ReturnType<typeof hexToRg
 
 const statusItems = [
   {
-    title: "Homepage Portal",
-    state: "In progress",
-    detail: "Project introduction, status sharing, guides, and support entry points are being consolidated.",
-    next: "Add real document links and release notes.",
-    icon: Layers3,
-    value: "72%",
+    title: "시장 데이터 시스템",
+    detail: "상세 정보는 추후 공개됩니다.",
   },
   {
-    title: "Backend Planning",
-    state: "Planning",
-    detail: "Service contracts, project APIs, auth boundaries, and environment strategy are being defined.",
-    next: "Confirm API scope and environment variables.",
-    icon: Server,
-    value: "34%",
+    title: "전략 엔진",
+    detail: "상세 정보는 추후 공개됩니다.",
   },
   {
-    title: "Strategy Engine",
-    state: "Research",
-    detail: "Ichimoku-based module specifications and testable execution architecture are under review.",
-    next: "Document strategy module inputs and outputs.",
-    icon: GitBranch,
-    value: "18%",
+    title: "백테스트 시스템",
+    detail: "상세 정보는 추후 공개됩니다.",
   },
   {
-    title: "Testing",
-    state: "Queued",
-    detail: "Regression checklist, accessibility pass, and deployment verification flows are prepared for later stages.",
-    next: "Create smoke-test checklist.",
-    icon: TestTube2,
-    value: "12%",
+    title: "자동매매 시스템",
+    detail: "상세 정보는 추후 공개됩니다.",
   },
 ];
 
 const overviewItems = [
   {
-    title: "Project Introduction",
-    copy: "EUKK TRADE의 목적, 개발 방향, 현재 제공 범위를 한 곳에서 확인합니다.",
+    title: "살아남기",
+    copy: "이 시대에 필요한 금융 도구를 만듭니다.",
   },
   {
-    title: "Development Status",
-    copy: "진행 중인 영역과 다음 작업을 공유해 프로젝트 상황을 빠르게 파악할 수 있게 합니다.",
+    title: "시간 절약",
+    copy: "반복되는 판단과 실행을 자동화합니다.",
   },
   {
-    title: "Documentation Hub",
-    copy: "설치, 개발, 디자인 관련 문서로 이동하는 공식 진입점을 제공합니다.",
+    title: "함께 성장",
+    copy: "윾승이들과 지식을 나누며 발전합니다.",
   },
 ];
 
-const guides = [
+const guideCards = [
   {
-    id: "installation-guide",
-    title: "Installation Guide",
-    label: "Primary Guide",
-    copy: "로컬 실행 환경, 의존성 설치, 프로젝트 실행 순서를 정리하는 시작 문서입니다.",
-    points: ["Runtime and package setup", "Local development command", "Environment checklist"],
-    icon: Terminal,
-    href: "#guides",
+    title: "처음 시작한다면 설치 가이드부터",
+    copy: "EUKK TRADE를 실행하기 위한 기본 흐름과 초기 설정 방법을 확인하세요.",
+    cta: "설치 가이드 보기",
+    href: "/developers#installation-guide",
+    primary: true,
   },
   {
-    id: "development-guide",
-    title: "Development Guide",
-    label: "Primary Guide",
-    copy: "폴더 구조, 작업 규칙, 구현 기준, 검증 절차를 공유하는 개발자용 문서입니다.",
-    points: ["Project structure", "Contribution workflow", "Testing and review checklist"],
-    icon: Code2,
-    href: "#guides",
+    title: "개발 가이드",
+    copy: "프로젝트 구조와 개발 규칙은 이곳에서 정리됩니다.",
+    cta: "개발 문서 보기",
+    href: "/developers#development-guide",
   },
   {
-    id: "design-guide",
-    title: "Design Guide",
-    label: "Reference Document",
-    copy: "메인 콘텐츠가 아닌 하위 레퍼런스로 유지하며, UI 컴포넌트와 버튼 규칙을 확인합니다.",
-    points: ["Button variants", "Typography references", "Interaction states"],
-    icon: BookOpen,
-    href: "/design-system",
-    reference: true,
+    title: "디자인 가이드",
+    copy: "UI 컴포넌트와 인터랙션 기준을 확인할 수 있습니다.",
+    cta: "디자인 기준 보기",
+    href: "/developers#design-guide",
   },
 ];
 
 const changelog = [
-  { date: "2026.06", title: "Project portal structure revised", copy: "Homepage focus shifted from design showcase to official project hub." },
-  { date: "2026.06", title: "Development status expanded", copy: "Module cards now include current state, progress, and next-step context." },
-  { date: "2026.06", title: "Design guide repositioned", copy: "Design System remains available as a supporting reference document." },
+  {
+    date: "2026.06.08 (월)",
+    title: "공식 프로젝트 포털 공개",
+    copy: "EUKK TRADE 프로젝트 소개, 개발 현황, 가이드 문서, 지원 안내를 포함한 공식 포털을 공개했습니다.",
+  },
 ];
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
@@ -167,34 +155,29 @@ function ProjectLogo({ surface = "light", className = "" }: { surface?: "light" 
 }
 
 function GlobalNavigation({ isHeroVisible }: { isHeroVisible: boolean }) {
-  const [isGuideMenuOpen, setIsGuideMenuOpen] = useState(false);
-  const [isMobileGuideOpen, setIsMobileGuideOpen] = useState(false);
-  const guideCloseTimerRef = useRef<number | null>(null);
   const navTextClass = isHeroVisible ? "text-[#F2FFFB]/76 hover:bg-white/8 hover:text-[#F2FFFB]" : "text-[#31403e] hover:bg-slate-900/6 hover:text-[#06201F]";
+  const githubButtonClass = isHeroVisible
+    ? "border-white/24 bg-[#F2FFFB] text-[#06201F] hover:border-white/34 hover:bg-[#F8FFFD]"
+    : "border-slate-900/12 bg-[#071416] text-[#F2FFFB] hover:border-slate-900/18 hover:bg-[#102224]";
+  const menuPanelClass = isHeroVisible
+    ? "border-[#1E3638] bg-[#071416] text-[#F2FFFB] shadow-[0_18px_42px_rgba(0,0,0,0.26)]"
+    : "border-[#DDE5E3] bg-white text-[#102624] shadow-[0_18px_42px_rgba(15,38,35,0.12)]";
+  const menuTitleClass = isHeroVisible ? "text-[#B7D8D2]" : "text-[#55706B]";
+  const menuItemClass = isHeroVisible
+    ? "text-[#EEFDF9] hover:bg-white/7 hover:text-white focus-visible:bg-white/7 focus-visible:text-white"
+    : "text-[#142C29] hover:bg-[#EEF4F2] hover:text-[#06201F] focus-visible:bg-[#EEF4F2] focus-visible:text-[#06201F]";
 
-  const openGuideMenu = () => {
-    if (guideCloseTimerRef.current) {
-      window.clearTimeout(guideCloseTimerRef.current);
-    }
-    setIsGuideMenuOpen(true);
-  };
-
-  const closeGuideMenu = () => {
-    if (guideCloseTimerRef.current) {
-      window.clearTimeout(guideCloseTimerRef.current);
-    }
-    guideCloseTimerRef.current = window.setTimeout(() => {
-      setIsGuideMenuOpen(false);
-    }, 180);
-  };
-
-  useEffect(() => {
-    return () => {
-      if (guideCloseTimerRef.current) {
-        window.clearTimeout(guideCloseTimerRef.current);
-      }
-    };
-  }, []);
+  const renderMenuLink = (item: { label: string; href: string }, className: string, onClick?: () => void) => (
+    item.href.startsWith("/") ? (
+      <Link key={item.label} to={item.href} className={className} onClick={onClick}>
+        {item.label}
+      </Link>
+    ) : (
+      <a key={item.label} href={item.href} className={className} onClick={onClick}>
+        {item.label}
+      </a>
+    )
+  );
 
   return (
     <header
@@ -212,123 +195,37 @@ function GlobalNavigation({ isHeroVisible }: { isHeroVisible: boolean }) {
         <div className="hidden items-center gap-1 lg:flex">
           <a href="#overview" className={`rounded-md px-3 py-2 text-sm [transition:all_300ms_ease] ${navTextClass}`}>프로젝트 소개</a>
           <a href="#status" className={`rounded-md px-3 py-2 text-sm [transition:all_300ms_ease] ${navTextClass}`}>개발 현황</a>
-          <div
-            className="relative"
-            onMouseEnter={openGuideMenu}
-            onMouseLeave={closeGuideMenu}
-            onFocus={openGuideMenu}
-            onBlur={closeGuideMenu}
-          >
+          <div className="group/guides relative">
             <a
               href="#guides"
               aria-haspopup="true"
-              aria-expanded={isGuideMenuOpen}
-              className={`flex items-center gap-1 rounded-md px-3 py-2 text-sm [transition:all_300ms_ease] ${navTextClass}`}
+              className={`flex items-center gap-1 rounded-md px-3 py-2 text-sm [transition:all_75ms_ease] ${navTextClass}`}
             >
-              가이드 <ChevronDown className={`h-3.5 w-3.5 transition ${isGuideMenuOpen ? "rotate-180" : ""}`} />
+              가이드 <ChevronDown className="h-3.5 w-3.5" />
             </a>
-            <div
-              className={`absolute right-0 top-[calc(100%+0.7rem)] w-[360px] rounded-xl border border-[#14E3B2]/18 bg-[rgba(5,16,18,0.92)] p-3 text-[#EAFBF8] shadow-[0_28px_90px_rgba(0,0,0,0.34),0_0_0_1px_rgba(30,167,255,0.06)] backdrop-blur-2xl [transition:opacity_300ms_ease,transform_300ms_ease,visibility_300ms_ease] ${
-                isGuideMenuOpen ? "visible translate-y-0 opacity-100" : "invisible -translate-y-1.5 opacity-0"
-              }`}
-            >
-              <div className="border-b border-[#14E3B2]/12 px-3 pb-3 pt-2">
-                <p className="text-sm font-semibold tracking-[-0.02em] text-[#EAFBF8]">Guide Center</p>
-                <p className="mt-1 text-xs leading-5 text-[#8FBAB5]">Installation, development, and design resources.</p>
-              </div>
-              <div className="mt-2 space-y-1.5">
-                {guideItems.map((item) => {
-                  const Icon = item.icon;
-                  const itemClass = "group/item flex items-center gap-3 rounded-lg border border-[#14E3B2]/8 px-3 py-3 text-left [transition:all_300ms_ease] hover:border-[#14E3B2]/24 hover:bg-[#14E3B2]/8 hover:shadow-[0_10px_34px_rgba(20,227,178,0.08)]";
-                  const content = (
-                    <>
-                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-[#14E3B2]/14 bg-[#14E3B2]/8 text-[#14E3B2]">
-                        <Icon className="h-4 w-4" aria-hidden="true" />
-                      </span>
-                      <span className="min-w-0 flex-1">
-                        <span className="block text-sm font-medium tracking-[-0.02em] text-[#EAFBF8]">{item.label}</span>
-                        <span className="mt-0.5 block text-xs leading-5 text-[#8FBAB5]">{item.description}</span>
-                      </span>
-                      <ArrowRight className="h-4 w-4 shrink-0 text-[#8FBAB5] transition group-hover/item:translate-x-0.5 group-hover/item:text-[#14E3B2]" aria-hidden="true" />
-                    </>
-                  );
-
-                  return item.href.startsWith("/") ? (
-                    <Link key={item.label} to={item.href} className={itemClass}>
-                      {content}
-                    </Link>
-                  ) : (
-                    <a key={item.label} href={item.href} className={itemClass}>
-                      {content}
-                    </a>
-                  );
-                })}
+            <div className="absolute left-1/2 top-full hidden w-max min-w-[220px] max-w-[min(320px,calc(100vw-2rem))] -translate-x-1/2 pt-2 group-hover/guides:block group-focus-within/guides:block">
+              <div className={`rounded-xl border px-5 py-5 ${menuPanelClass}`}>
+                <p className={`text-xs font-medium ${menuTitleClass}`}>Developers</p>
+                <div className="mt-4 space-y-1">
+                  {guideItems.map((item) => renderMenuLink(item, `block whitespace-nowrap rounded-md px-2 py-2 text-sm font-medium tracking-[-0.01em] outline-none [transition:color_75ms_ease,background-color_75ms_ease] ${menuItemClass}`))}
+                </div>
               </div>
             </div>
           </div>
           <a href="#support" className={`rounded-md px-3 py-2 text-sm [transition:all_300ms_ease] ${navTextClass}`}>지원</a>
         </div>
         <div className="relative">
-          <button
-            type="button"
-            aria-expanded={isMobileGuideOpen}
-            aria-controls="mobile-guide-menu"
-            onClick={() => setIsMobileGuideOpen((open) => !open)}
-            className={`rounded-md border px-3 py-1.5 text-xs font-medium [transition:all_300ms_ease] sm:px-4 sm:py-2 sm:text-sm lg:hidden ${
-              isHeroVisible ? "border-white/16 bg-white/8 text-[#F2FFFB] hover:bg-white/14" : "border-border bg-secondary text-secondary-foreground hover:bg-accent"
-            }`}
-          >
-            문서 보기
-          </button>
           <a
-            href="#guides"
-            className={`hidden rounded-md border px-4 py-2 text-sm font-medium [transition:all_300ms_ease] lg:inline-flex ${
-              isHeroVisible ? "border-white/16 bg-white/8 text-[#F2FFFB] hover:bg-white/14" : "border-border bg-secondary text-secondary-foreground hover:bg-accent"
-            }`}
+            href={githubDownloadUrl}
+            target="_blank"
+            rel="noreferrer"
+            aria-label="GitHub에서 다운로드"
+            className={`inline-flex h-9 w-9 items-center justify-center rounded-md border shadow-[0_18px_50px_rgba(20,227,178,0.08)] [transition:background-color_180ms_ease,border-color_180ms_ease,color_180ms_ease] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00C8D7]/70 sm:h-10 sm:w-10 ${githubButtonClass}`}
           >
-            문서 보기
+            <Github className="h-4 w-4" aria-hidden="true" />
           </a>
         </div>
       </nav>
-      <div
-        id="mobile-guide-menu"
-        className={`lg:hidden overflow-hidden border-t border-[#14E3B2]/12 bg-[rgba(5,16,18,0.94)] px-4 backdrop-blur-2xl [transition:max-height_300ms_ease,opacity_300ms_ease,padding_300ms_ease] ${
-          isMobileGuideOpen ? "max-h-96 py-3 opacity-100" : "max-h-0 py-0 opacity-0"
-        }`}
-      >
-        <div className="mx-auto max-w-7xl space-y-2">
-          <div className="px-1 pb-1">
-            <p className="text-sm font-semibold tracking-[-0.02em] text-[#EAFBF8]">Guide Center</p>
-            <p className="mt-1 text-xs leading-5 text-[#8FBAB5]">Installation, development, and design resources.</p>
-          </div>
-          {guideItems.map((item) => {
-            const Icon = item.icon;
-            const itemClass = "flex items-center gap-3 rounded-lg border border-[#14E3B2]/12 bg-[#14E3B2]/6 px-3 py-3 text-left";
-            const content = (
-              <>
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-[#14E3B2]/14 bg-[#14E3B2]/8 text-[#14E3B2]">
-                  <Icon className="h-4 w-4" aria-hidden="true" />
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span className="block text-sm font-medium text-[#EAFBF8]">{item.label}</span>
-                  <span className="mt-0.5 block text-xs leading-5 text-[#8FBAB5]">{item.description}</span>
-                </span>
-                <ArrowRight className="h-4 w-4 shrink-0 text-[#8FBAB5]" aria-hidden="true" />
-              </>
-            );
-
-            return item.href.startsWith("/") ? (
-              <Link key={item.label} to={item.href} className={itemClass} onClick={() => setIsMobileGuideOpen(false)}>
-                {content}
-              </Link>
-            ) : (
-              <a key={item.label} href={item.href} className={itemClass} onClick={() => setIsMobileGuideOpen(false)}>
-                {content}
-              </a>
-            );
-          })}
-        </div>
-      </div>
     </header>
   );
 }
@@ -517,6 +414,55 @@ export function Homepage() {
 
       <section id="hero" className="relative flex min-h-[100svh] w-full flex-col overflow-hidden bg-[var(--hero-bg)] px-5 pb-8 pt-24 text-[#F2FFFB] sm:pb-10 sm:pt-28 md:px-8 lg:bg-transparent lg:pb-12 lg:pt-24">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_28%,rgba(0,208,180,0.18),transparent_31%),radial-gradient(circle_at_50%_34%,rgba(0,163,255,0.12),transparent_38%)] opacity-90 sm:opacity-100" />
+        <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+          <div className="hero-light hero-light-mint" />
+          <div className="hero-light hero-light-blue" />
+          <div className="absolute inset-0 opacity-[0.13] [background-image:linear-gradient(rgba(20,227,178,0.18)_1px,transparent_1px),linear-gradient(90deg,rgba(0,200,215,0.13)_1px,transparent_1px)] [background-size:72px_72px] [mask-image:radial-gradient(circle_at_50%_45%,black,transparent_72%)]" />
+          <div className="absolute left-1/2 top-1/2 h-[58rem] w-[58rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#14E3B2]/8 opacity-70 motion-safe:animate-[heroPulse_9s_ease-in-out_infinite]" />
+          <div className="absolute left-1/2 top-1/2 h-[34rem] w-[34rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#00C8D7]/10 opacity-70 motion-safe:animate-[heroPulse_11s_ease-in-out_infinite_reverse]" />
+
+          <svg className="absolute inset-x-0 top-[18%] hidden h-[62%] w-full opacity-35 sm:block" viewBox="0 0 1200 620" fill="none" preserveAspectRatio="none">
+            <path d="M72 420C226 336 334 378 486 296C654 206 792 226 1128 118" stroke="url(#hero-flow-a)" strokeWidth="1" />
+            <path d="M118 174C276 228 368 162 512 236C692 328 820 304 1080 420" stroke="url(#hero-flow-b)" strokeWidth="1" />
+            <circle cx="486" cy="296" r="3" fill="#14E3B2" opacity="0.55" />
+            <circle cx="792" cy="226" r="2.5" fill="#00C8D7" opacity="0.5" />
+            <circle cx="512" cy="236" r="2.5" fill="#14E3B2" opacity="0.45" />
+            <defs>
+              <linearGradient id="hero-flow-a" x1="72" y1="420" x2="1128" y2="118" gradientUnits="userSpaceOnUse">
+                <stop stopColor="#14E3B2" stopOpacity="0" />
+                <stop offset="0.5" stopColor="#14E3B2" stopOpacity="0.42" />
+                <stop offset="1" stopColor="#00A3FF" stopOpacity="0" />
+              </linearGradient>
+              <linearGradient id="hero-flow-b" x1="118" y1="174" x2="1080" y2="420" gradientUnits="userSpaceOnUse">
+                <stop stopColor="#00A3FF" stopOpacity="0" />
+                <stop offset="0.5" stopColor="#00C8D7" stopOpacity="0.34" />
+                <stop offset="1" stopColor="#14E3B2" stopOpacity="0" />
+              </linearGradient>
+            </defs>
+          </svg>
+
+          {heroBackgroundWords.map((item) => (
+            <span
+              key={item.text}
+              className={`absolute select-none whitespace-nowrap font-mono font-semibold uppercase leading-none tracking-[0.08em] text-[#F2FFFB]/[0.035] ${item.className}`}
+            >
+              {item.text}
+            </span>
+          ))}
+
+          {heroCodeFragments.map((item) => (
+            <span
+              key={item.text}
+              className={`absolute rounded-md border border-[#14E3B2]/10 bg-[#061B1B]/55 px-3 py-1.5 font-mono text-[11px] text-[#8AA5A1]/38 shadow-[0_12px_34px_rgba(0,0,0,0.12)] ${item.className}`}
+            >
+              {item.text}
+            </span>
+          ))}
+
+          <span className="absolute left-[18%] top-[24%] h-1.5 w-1.5 rounded-full bg-[#14E3B2]/35 motion-safe:animate-[heroPulse_6s_ease-in-out_infinite]" />
+          <span className="absolute right-[19%] top-[20%] hidden h-1.5 w-1.5 rounded-full bg-[#00C8D7]/35 motion-safe:animate-[heroPulse_7s_ease-in-out_infinite_reverse] sm:block" />
+          <span className="absolute bottom-[24%] left-[31%] hidden h-1 w-1 rounded-full bg-[#F2FFFB]/28 motion-safe:animate-[heroPulse_8s_ease-in-out_infinite] md:block" />
+        </div>
         <div className="relative z-10 flex min-h-0 flex-1 flex-col will-change-transform lg:transition-none" style={heroMotionStyle}>
           <div className="mx-auto flex w-full max-w-3xl flex-1 -translate-y-4 flex-col items-center justify-center py-8 text-center sm:-translate-y-6 sm:py-10 lg:-translate-y-12">
             <img
@@ -527,7 +473,7 @@ export function Homepage() {
             <h1 className="mt-7 text-[clamp(2.1rem,8vw,3.5rem)] font-semibold leading-none text-[#F2FFFB] md:mt-9 lg:mt-10">EUKK TRADE</h1>
             <p className="mt-3 font-mono text-xs text-[#8AA5A1] sm:text-sm md:mt-4 md:text-base">ver 1.0.0</p>
             <a
-              href="https://github.com/OverDlive/AutoTrading-releases"
+              href={githubDownloadUrl}
               target="_blank"
               rel="noreferrer"
               className="mt-8 inline-flex h-11 items-center justify-center gap-2 rounded-md bg-[#F2FFFB] px-5 text-sm font-medium text-[#06201F] shadow-[0_18px_50px_rgba(20,227,178,0.08)] transition hover:bg-[#F8FFFD] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00C8D7]/70 sm:h-12 sm:px-6 md:mt-10 md:h-[52px] md:px-7 md:text-base"
@@ -538,7 +484,7 @@ export function Homepage() {
             <p className="mt-4 text-xs leading-6 text-[#8AA5A1] sm:text-sm md:mt-5 md:text-[15px]">현재 Windows와 macOS에서 사용 가능합니다</p>
           </div>
           <div className="mx-auto mt-10 w-full max-w-[22rem] px-1 text-center sm:mt-12 sm:max-w-2xl md:mt-14 md:max-w-3xl lg:mt-8 lg:max-w-5xl">
-            <h2 className="bg-gradient-to-r from-[#F4FFFC] via-[#E9FFF8] to-[#14E3B2] bg-clip-text text-[clamp(1.65rem,5vw,2.875rem)] font-extrabold leading-[1.32] text-transparent md:leading-[1.28] lg:leading-[1.25]">
+            <h2 className="hero-headline-gradient text-[clamp(1.65rem,5vw,2.875rem)] font-extrabold leading-[1.32] md:leading-[1.28] lg:leading-[1.25]">
               일목균형표 기반의 자동매매기를 경험해보세요
             </h2>
             <p className="mt-4 whitespace-pre-line text-base font-extrabold leading-[1.35] text-[#8AA5A1]/82 sm:text-lg md:mt-5 md:text-xl lg:text-2xl">
@@ -559,25 +505,32 @@ export function Homepage() {
         <div className="relative z-10 mx-auto grid w-full max-w-7xl items-center gap-12 will-change-transform lg:grid-cols-[0.95fr_1.05fr]" style={overviewMotionStyle}>
           <div>
             <SectionLabel>01 / Product Message</SectionLabel>
-            <h2 className="mt-5 max-w-3xl text-[clamp(2rem,6vw,4.5rem)] font-extrabold leading-[1.08] tracking-[-0.04em] text-foreground">
-              자동매매를 더 쉽고 직관적인 흐름으로.
+            <h2 className="mt-5 max-w-[42rem] text-[clamp(2rem,6vw,4.5rem)] font-extrabold leading-[1.12] tracking-[-0.04em] text-foreground [overflow-wrap:normal] [word-break:keep-all]">
+              <span className="block">자동매매를 쉽고</span>
+              <span className="block">직관적인 흐름으로.</span>
             </h2>
             <p className="mt-6 max-w-2xl text-base leading-8 text-[#254441]/72 md:text-xl">
               시장은 24시간 움직이고, 사람은 쉬어야 합니다. EUKK TRADE는 일목균형표 기반 전략을 백테스팅부터 자동 매매까지 연결하는 프로젝트입니다.
             </p>
           </div>
           <div className="min-h-[320px] rounded-lg border border-slate-900/10 bg-card/75 p-5 shadow-[0_28px_90px_rgba(15,23,42,0.12)] md:min-h-[460px]">
-            <div className="flex h-full min-h-[280px] flex-col justify-between rounded-md border border-slate-900/10 bg-gradient-to-br from-white/90 to-[#EDF2F1]/80 p-5 md:min-h-[420px]">
+            <div className="flex h-full min-h-[280px] flex-col justify-between rounded-md border border-slate-900/10 bg-gradient-to-br from-white/95 to-[#EDF2F1]/85 p-5 md:min-h-[420px]">
               <div className="flex items-center justify-between">
-                <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#008A94]">future preview area</span>
+                <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#008A94]">project principles</span>
                 <span className="h-2 w-2 rounded-full bg-[#0FAE98]" />
               </div>
-              <div className="space-y-3">
-                {overviewItems.map((item) => (
-                  <div key={item.title} className="rounded-md border border-slate-900/10 bg-white/70 p-4">
-                    <CheckCircle2 className="mb-4 h-4 w-4 text-[#008A94]/75" />
-                    <h3 className="font-semibold tracking-[-0.03em]">{item.title}</h3>
-                    <p className="mt-2 text-sm leading-6 text-[#254441]/64">{item.copy}</p>
+              <div className="space-y-4">
+                {overviewItems.map((item, index) => (
+                  <div key={item.title} className="group rounded-md border border-[#008A94]/20 bg-white/90 p-5 shadow-[0_16px_46px_rgba(15,38,35,0.08)] transition hover:border-[#008A94]/34 hover:bg-white">
+                    <div className="flex items-center gap-5">
+                      <span className="shrink-0 font-mono text-[clamp(2rem,4vw,3.5rem)] font-semibold leading-none tracking-[-0.08em] text-[#008A94]/28">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <div className="min-w-0 border-l border-[#008A94]/20 pl-5">
+                        <h3 className="text-2xl font-semibold tracking-[-0.04em] text-[#06201F]">{item.title}</h3>
+                        <p className="mt-2 text-sm leading-6 text-[#254441]/68 [word-break:keep-all]">{item.copy}</p>
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -591,30 +544,27 @@ export function Homepage() {
           <SectionHeading
             eyebrow="02 / Development Status"
             title="개발 현황"
-            copy="현재 EUKK TRADE의 개발 진행 상황을 모듈별로 공유합니다. 각 항목은 진행 단계, 진행률, 다음 작업을 함께 제공합니다."
+            copy="EUKK TRADE의 주요 시스템은 현재 개발 및 검증 과정에 있습니다. 상세 기술 문서와 기능 설명은 추후 순차적으로 공개될 예정입니다."
           />
           <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-            {statusItems.map((item) => {
-              const Icon = item.icon;
-              return (
-                <div key={item.title} className="rounded-lg border border-border bg-card p-6 shadow-[0_20px_70px_rgba(15,23,42,0.08)]">
-                  <div className="flex items-center justify-between">
-                    <Icon className="h-6 w-6 text-[#008A94]/78" />
-                    <span className="font-mono text-xs text-[#008A94]">{item.value}</span>
-                  </div>
-                  <h3 className="mt-10 text-lg font-semibold tracking-[-0.025em]">{item.title}</h3>
-                  <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.16em] text-[#008A94]">{item.state}</p>
-                  <div className="mt-6 h-2 rounded-full bg-slate-900/10">
-                    <div className="h-full rounded-full bg-primary" style={{ width: item.value }} />
-                  </div>
-                  <p className="mt-6 text-sm leading-6 text-[#254441]/68">{item.detail}</p>
-                  <div className="mt-6 rounded-md border border-border bg-secondary/50 p-4">
-                    <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-[#008A94]">Next</p>
-                    <p className="mt-2 text-sm leading-5 text-[#254441]/72">{item.next}</p>
-                  </div>
+            {statusItems.map((item) => (
+              <div key={item.title} className="rounded-lg border border-border bg-card p-6 shadow-[0_20px_70px_rgba(15,23,42,0.08)]">
+                <div className="flex items-start justify-between gap-4">
+                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-[#008A94]/18 bg-[#008A94]/8 text-[#007F87]">
+                    <LockKeyhole className="h-4 w-4" aria-hidden="true" />
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 rounded-md border border-[#008A94]/16 bg-[#008A94]/8 px-2.5 py-1 font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-[#007F87]">
+                    <LockKeyhole className="h-3 w-3" aria-hidden="true" />
+                    공개 예정
+                  </span>
                 </div>
-              );
-            })}
+                <h3 className="mt-10 text-lg font-semibold tracking-[-0.025em] text-[#06201F]">{item.title}</h3>
+                <p className="mt-4 text-sm leading-6 text-[#254441]/68">{item.detail}</p>
+                <div className="mt-8 rounded-md border border-dashed border-[#008A94]/22 bg-[#F7FAF9] px-4 py-3">
+                  <p className="text-xs leading-5 text-[#254441]/58">기술 세부 정보는 공개 범위 확정 후 문서로 제공됩니다.</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -626,51 +576,46 @@ export function Homepage() {
             title="EUKK TRADE 가이드"
             copy="EUKK TRADE를 이해하고 활용하기 위한 문서 진입점입니다. 설치와 개발 문서를 우선 배치하고, Design Guide는 하위 레퍼런스로 연결합니다."
           />
-          <div className="grid gap-5 lg:grid-cols-[1fr_1fr_0.8fr]">
-            {guides.map((guide) => {
-              const Icon = guide.icon;
-              const content = (
-                <>
-                  <div className="flex items-center justify-between">
-                    <Icon className="h-6 w-6 opacity-70" />
-                    <span className={`rounded-md px-2 py-1 font-mono text-[10px] uppercase tracking-[0.14em] ${guide.reference ? "bg-secondary text-secondary-foreground" : "bg-[#0FAE98]/10 text-[#075F57]"}`}>{guide.label}</span>
-                  </div>
-                  <h3 className="mt-12 text-2xl font-semibold tracking-[-0.04em]">{guide.title}</h3>
-                  <p className={`mt-4 text-sm leading-6 ${guide.reference ? "text-[#254441]/68" : "text-muted-foreground"}`}>{guide.copy}</p>
-                  <div className="mt-8 space-y-3">
-                    {guide.points.map((point) => (
-                      <div key={point} className="flex items-center gap-2 text-sm text-[#254441]/68">
-                        <ListChecks className="h-4 w-4 text-[#008A94]/70" />
-                        {point}
-                      </div>
-                    ))}
-                  </div>
-                  <div className="mt-10 inline-flex items-center gap-2 text-sm font-medium">
-                    문서 열기 <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
-                  </div>
-                </>
-              );
+          <div className="grid gap-5 lg:grid-cols-[1.18fr_0.82fr]">
+            <Link
+              to={guideCards[0].href}
+              className="group flex min-h-[360px] flex-col justify-between rounded-lg border border-[#14E3B2]/40 bg-[#061B1B] p-7 text-[#F2FFFB] shadow-[0_24px_80px_rgba(20,227,178,0.18)] transition hover:-translate-y-0.5 hover:border-[#14E3B2]/70 sm:p-9 lg:min-h-[440px]"
+            >
+              <div>
+                <span className="inline-flex rounded-md border border-[#14E3B2]/24 bg-[#14E3B2]/10 px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-[#8DFFF0]">
+                  Recommended
+                </span>
+                <h3 className="mt-10 max-w-xl text-[clamp(2rem,4vw,3.4rem)] font-semibold leading-[1.02] tracking-[-0.05em]">
+                  {guideCards[0].title}
+                </h3>
+                <p className="mt-5 max-w-lg text-base leading-7 text-[#C8E8E2] md:text-lg">
+                  {guideCards[0].copy}
+                </p>
+              </div>
+              <span className="mt-12 inline-flex w-fit items-center gap-2 rounded-md bg-[#F2FFFB] px-4 py-3 text-sm font-semibold text-[#06201F] shadow-[0_14px_42px_rgba(20,227,178,0.14)] transition group-hover:bg-white">
+                {guideCards[0].cta}
+                <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" aria-hidden="true" />
+              </span>
+            </Link>
 
-              return guide.href.startsWith("/") ? (
+            <div className="grid gap-5">
+              {guideCards.slice(1).map((guide) => (
                 <Link
-                  id={guide.id}
                   key={guide.title}
                   to={guide.href}
-                  className="group rounded-lg border border-border bg-card p-7 shadow-[0_20px_70px_rgba(15,23,42,0.08)] transition hover:-translate-y-1"
+                  className="group flex min-h-[180px] flex-col justify-between rounded-lg border border-border bg-card p-7 shadow-[0_20px_70px_rgba(15,23,42,0.08)] transition hover:-translate-y-0.5 hover:border-[#008A94]/35 hover:shadow-[0_22px_74px_rgba(15,38,35,0.12)]"
                 >
-                  {content}
+                  <div>
+                    <h3 className="text-2xl font-semibold tracking-[-0.04em] text-[#06201F]">{guide.title}</h3>
+                    <p className="mt-4 text-sm leading-6 text-[#254441]/68">{guide.copy}</p>
+                  </div>
+                  <span className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-[#007F87]">
+                    {guide.cta}
+                    <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" aria-hidden="true" />
+                  </span>
                 </Link>
-              ) : (
-                <a
-                  id={guide.id}
-                  key={guide.title}
-                  href={guide.href}
-                  className="group rounded-lg border border-border bg-card p-7 shadow-[0_20px_70px_rgba(15,23,42,0.08)] transition hover:-translate-y-1"
-                >
-                  {content}
-                </a>
-              );
-            })}
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -681,75 +626,81 @@ export function Homepage() {
             <SectionLabel>04 / Support</SectionLabel>
             <h2 className="mt-5 text-[clamp(2rem,5vw,4rem)] font-extrabold leading-[1.1] tracking-[-0.04em]">지원 및 문의</h2>
             <p className="mt-6 max-w-xl text-base leading-8 text-[#254441]/72 md:text-lg">
-              프로젝트 이용 중 궁금한 점, 버그 제보, 기능 제안, 문서 개선 요청을 한 곳에서 연결합니다.
+              프로젝트 이용 중 궁금한 점이나 오류 제보, 기능 제안은 윾토피아 채널에서 공유해주세요.
             </p>
           </div>
           <div className="grid gap-5 md:grid-cols-2">
             <div className="rounded-lg border border-border bg-card p-7 shadow-[0_20px_70px_rgba(15,23,42,0.08)]">
               <Headphones className="h-6 w-6 text-[#008A94]/78" />
               <h3 className="mt-8 text-xl font-semibold tracking-[-0.03em]">문의 안내</h3>
-              <p className="mt-4 text-sm leading-6 text-[#254441]/68">프로젝트 이용 중 궁금한 점, 버그 제보, 기능 제안은 윾토피아 채널을 통해 공유해 주세요.</p>
+              <p className="mt-4 text-sm leading-6 text-[#254441]/68">EUKK TRADE 관련 문의, 오류 제보, 기능 제안은 디스코드 윾토피아 채널에서 받습니다.</p>
             </div>
             <div className="rounded-lg border border-border bg-card p-7 shadow-[0_20px_70px_rgba(15,23,42,0.08)]">
               <FileText className="h-6 w-6 text-[#008A94]/78" />
-              <h3 className="mt-8 text-xl font-semibold tracking-[-0.03em]">문서 요청</h3>
-              <p className="mt-4 text-sm leading-6 text-[#254441]/68">설치, 개발, 디자인 가이드에 추가가 필요한 내용은 프로젝트 문서 개선 항목으로 관리합니다.</p>
+              <h3 className="mt-8 text-xl font-semibold tracking-[-0.03em]">업데이트 안내</h3>
+              <p className="mt-4 text-sm leading-6 text-[#254441]/68">기능 추가, 문서 변경, 배포 관련 안내는 사이트와 윾토피아 채널을 통해 순차적으로 공유됩니다.</p>
             </div>
           </div>
         </div>
       </section>
 
-      <section id="final" className="flex min-h-[100svh] w-full flex-col justify-center bg-white px-5 py-24 md:px-8 lg:py-28">
-        <div className="mx-auto w-full max-w-7xl">
-          <SectionHeading
-            eyebrow="05 / Final"
-            title="프로젝트 업데이트와 다음 단계"
-            copy="프로젝트 포털, 개발 현황, 가이드 문서 구조의 주요 변경 사항을 간단히 기록합니다."
-          />
-          <div className="mx-auto max-w-3xl divide-y divide-border rounded-lg border border-border bg-card shadow-[0_20px_70px_rgba(15,23,42,0.08)]">
+      <section id="final" className="relative flex min-h-[100svh] w-full flex-col justify-center overflow-hidden bg-[#020f0f] px-5 py-24 text-[#F2FFFB] md:px-8 lg:py-28">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_24%_22%,rgba(20,227,178,0.16),transparent_34%),radial-gradient(circle_at_76%_70%,rgba(30,167,255,0.12),transparent_38%)]" aria-hidden="true" />
+        <div className="absolute inset-0 opacity-[0.08] [background-image:linear-gradient(rgba(20,227,178,0.18)_1px,transparent_1px),linear-gradient(90deg,rgba(0,200,215,0.13)_1px,transparent_1px)] [background-size:80px_80px] [mask-image:radial-gradient(circle_at_50%_42%,black,transparent_76%)]" aria-hidden="true" />
+        <div className="relative z-10 mx-auto w-full max-w-7xl">
+          <div className="mx-auto mb-10 max-w-3xl text-center">
+            <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#14E3B2]">05 / Final</p>
+            <h2 className="mt-4 text-[clamp(2rem,5vw,3.5rem)] font-semibold leading-[1.12] tracking-[-0.04em] text-[#F2FFFB]">프로젝트 업데이트와 다음 단계</h2>
+            <p className="mt-4 text-base leading-7 text-[#A8C7C1] md:text-lg">프로젝트의 주요 공개 이력과 포털 업데이트 내역을 기록합니다.</p>
+          </div>
+          <div className="mx-auto max-w-3xl divide-y divide-[#14E3B2]/12 rounded-lg border border-[#14E3B2]/16 bg-[#061B1B]/88 shadow-[0_26px_90px_rgba(0,0,0,0.28),0_0_0_1px_rgba(30,167,255,0.04)]">
+            <div className="px-6 py-4">
+              <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-[#14E3B2]">UPDATE LOG</p>
+            </div>
             {changelog.map((item) => (
               <div key={item.title} className="grid gap-4 p-6 md:grid-cols-[120px_1fr]">
-                <span className="font-mono text-xs text-[#008A94]">{item.date}</span>
+                <span className="font-mono text-xs text-[#14E3B2]">{item.date}</span>
                 <div>
-                  <h3 className="font-semibold tracking-[-0.02em]">{item.title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-[#254441]/68">{item.copy}</p>
+                  <h3 className="font-semibold tracking-[-0.02em] text-[#F2FFFB]">{item.title}</h3>
+                  <p className="mt-2 text-sm leading-6 text-[#A8C7C1]">{item.copy}</p>
                 </div>
               </div>
             ))}
+            <div className="grid gap-4 bg-white/[0.035] p-6 opacity-80 md:grid-cols-[120px_1fr]">
+              <span className="font-mono text-xs text-[#8AA5A1]">Waiting</span>
+              <div>
+                <h3 className="font-semibold tracking-[-0.02em] text-[#D8FFF6]/78">다음 업데이트 예정</h3>
+                <p className="mt-2 text-sm leading-6 text-[#A8C7C1]/78">새로운 기능, 문서, 개발 현황 공개 시 이 영역에 기록됩니다.</p>
+              </div>
+            </div>
           </div>
-          <footer className="mt-14 border-t border-border pt-8">
-            <div className="grid gap-8 md:grid-cols-[1.2fr_0.8fr_0.8fr_0.8fr]">
+          <footer className="mt-14 border-t border-white/10 pt-8">
+            <div className="grid gap-10 md:grid-cols-[1.4fr_0.75fr_0.75fr] lg:gap-16">
               <div>
-                <ProjectLogo surface="light" className="mb-5 h-9 w-auto object-contain opacity-90 md:h-11 lg:h-12" />
-                <p className="font-bold tracking-[-0.02em]">EUKK TRADE</p>
-                <p className="mt-3 max-w-sm text-sm leading-6 text-[#254441]/68">Official project portal for overview, development status, guides, and support.</p>
+                <ProjectLogo surface="dark" className="mb-5 h-9 w-auto object-contain opacity-90 md:h-11 lg:h-12" />
+                <p className="font-bold tracking-[-0.02em] text-[#F2FFFB]">EUKK TRADE</p>
+                <p className="mt-3 max-w-sm text-sm leading-6 text-[#A8C7C1]">
+                  자동매매를 쉽고 직관적인 흐름으로.<br />
+                  Community: 윾토피아
+                </p>
               </div>
               <div>
-                <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Project</p>
+                <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-[#8AA5A1]">Documentation</p>
                 <div className="mt-4 space-y-2">
-                  <a href="#overview" className="block text-sm text-[#254441]/62">프로젝트 소개</a>
-                  <a href="#status" className="block text-sm text-[#254441]/62">개발 현황</a>
-                  <a href="#support" className="block text-sm text-[#254441]/62">지원 및 문의</a>
+                  <Link to="/developers#installation-guide" className="block text-sm text-[#A8C7C1] transition hover:text-[#F2FFFB]">설치 가이드</Link>
+                  <Link to="/developers#development-guide" className="block text-sm text-[#A8C7C1] transition hover:text-[#F2FFFB]">개발 가이드</Link>
+                  <Link to="/developers#design-guide" className="block text-sm text-[#A8C7C1] transition hover:text-[#F2FFFB]">디자인 가이드</Link>
                 </div>
               </div>
               <div>
-                <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Guides</p>
+                <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-[#8AA5A1]">Links</p>
                 <div className="mt-4 space-y-2">
-                  <a href="#installation-guide" className="block text-sm text-[#254441]/62">Installation Guide</a>
-                  <a href="#development-guide" className="block text-sm text-[#254441]/62">Development Guide</a>
-                  <Link to="/design-system" className="block text-sm text-[#254441]/62">Design Guide</Link>
-                </div>
-              </div>
-              <div>
-                <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Status</p>
-                <div className="mt-4 space-y-2">
-                  <p className="text-sm text-[#254441]/62">Portal in progress</p>
-                  <p className="text-sm text-[#254441]/62">Docs expanding</p>
-                  <p className="text-sm text-[#254441]/62">Design Guide linked</p>
+                  <a href={githubDownloadUrl} target="_blank" rel="noreferrer" className="block text-sm text-[#A8C7C1] transition hover:text-[#F2FFFB]">GitHub Repository</a>
+                  <Link to="/developers" className="block text-sm text-[#A8C7C1] transition hover:text-[#F2FFFB]">Developers</Link>
                 </div>
               </div>
             </div>
-            <div className="mt-8 border-t border-border pt-6 font-mono text-[11px] uppercase tracking-[0.14em] text-[#254441]/58">© 2026 EUKK TRADE. Official project portal.</div>
+            <div className="mt-8 border-t border-white/10 pt-6 font-mono text-[11px] uppercase tracking-[0.14em] text-[#8AA5A1]">© 2026 EUKK TRADE</div>
           </footer>
         </div>
       </section>

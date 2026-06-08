@@ -15,4 +15,8 @@ export const router = createBrowserRouter([
     path: "/design-system",
     Component: DesignSystemPage,
   },
+  {
+    path: "/developers",
+    Component: DesignSystemPage,
+  },
 ]);

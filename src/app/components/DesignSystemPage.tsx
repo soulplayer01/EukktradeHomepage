@@ -1,12 +1,10 @@
 import { useState, useEffect, useRef } from "react";
-import { ImageWithFallback } from "./figma/ImageWithFallback";
-import logoImage from "../../imports/image.png";
 import { SectionHeader } from "./SectionHeader";
 import { ButtonCell, ButtonRow, GridSection } from "./ButtonLabel";
 import {
   ArrowRight, Plus, TrendingUp, TrendingDown, X, Target, ShieldAlert,
   BarChart2, ChevronDown, Bell, Settings, Search, Loader2, Check,
-  AlertCircle, Star, RefreshCw, ArrowUpRight, Zap,
+  AlertCircle, Star, RefreshCw, ArrowUpRight, Zap, Github, Moon, Sun,
 } from "lucide-react";
 import { Link } from "react-router";
 
@@ -23,6 +21,137 @@ const NAV_ITEMS = [
   { id: "playground", label: "Customization Area", index: "10" },
 ];
 
+const githubDownloadUrl = "https://github.com/OverDlive/AutoTrading-releases";
+const developersThemeStorageKey = "eukk-trade-developers-theme";
+
+function getInitialDevelopersTheme() {
+  if (typeof window === "undefined") return true;
+
+  const savedTheme = window.localStorage.getItem(developersThemeStorageKey);
+  if (savedTheme === "dark") return true;
+  if (savedTheme === "light") return false;
+
+  return window.matchMedia("(prefers-color-scheme: dark)").matches;
+}
+
+const DOC_NAV_ITEMS = [
+  { id: "installation-guide", label: "Installation Guide" },
+  { id: "development-guide", label: "Development Guide" },
+  { id: "design-guide", label: "Design Guide" },
+];
+
+const BASIC_BUTTON_SECTIONS = ["primary", "secondary", "ghost", "icon", "shape", "variations", "premium", "playground"];
+
+const SEARCH_ITEMS = [
+  ...DOC_NAV_ITEMS,
+  { id: "top", label: "EUKK TRADE Developers" },
+  { id: "buttons", label: "Buttons" },
+  { id: "primary", label: "Basic Buttons" },
+  { id: "states", label: "Button States" },
+  { id: "trading", label: "Trading Actions" },
+  ...NAV_ITEMS,
+];
+
+const INSTALLATION_PLACEHOLDERS = [
+  "설치 전 확인 사항",
+  "다운로드 및 실행",
+  "초기 설정",
+  "업데이트 및 문제 해결",
+];
+
+const DEVELOPMENT_PLACEHOLDERS = [
+  "프로젝트 구조",
+  "브랜치 및 커밋 규칙",
+  "배포 흐름",
+  "변경 이력 관리",
+];
+
+function ProjectLogo({ surface = "light", className = "" }: { surface?: "light" | "dark"; className?: string }) {
+  return (
+    <img
+      src={surface === "dark" ? "/project-logo-white.svg" : "/project-logo-black.svg"}
+      alt="EUKK TRADE Project Logo"
+      className={className}
+    />
+  );
+}
+
+function DesignGuideHeader({
+  isDarkMode,
+  searchQuery,
+  onSearchChange,
+  onSearchSubmit,
+  onToggleTheme,
+  onDevelopersClick,
+}: {
+  isDarkMode: boolean;
+  searchQuery: string;
+  onSearchChange: (value: string) => void;
+  onSearchSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+  onToggleTheme: () => void;
+  onDevelopersClick: () => void;
+}) {
+  const headerClass = isDarkMode
+    ? "border-white/8 bg-[#020f0f] text-[#F2FFFB]"
+    : "border-black/8 bg-[#F4F7F6] text-[#06201F]";
+  const mutedTextClass = isDarkMode ? "text-[#D8FFF6]/62" : "text-[#06201F]/58";
+  const developerClass = isDarkMode ? "border-white/14 text-[#F2FFFB]/84" : "border-black/12 text-[#06201F]/78";
+  const controlClass = isDarkMode
+    ? "border-white/12 bg-white/6 text-[#F2FFFB] placeholder:text-[#8AA5A1] hover:bg-white/10"
+    : "border-black/10 bg-white text-[#06201F] placeholder:text-[#607A76] hover:bg-[#EDF2F1]";
+  const githubClass = isDarkMode
+    ? "border-white/24 bg-[#F2FFFB] text-[#06201F] hover:bg-[#F8FFFD]"
+    : "border-black/12 bg-[#071416] text-[#F2FFFB] hover:bg-[#102224]";
+
+  return (
+    <header className={`sticky top-0 z-50 border-b ${headerClass}`}>
+      <nav className="flex h-14 w-full items-center justify-between gap-4 px-4 sm:h-16 sm:px-5 md:px-8">
+        <div className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2" aria-label="EUKK TRADE 홈페이지로 이동">
+            <ProjectLogo surface={isDarkMode ? "dark" : "light"} className="h-5 w-auto object-contain sm:h-6" />
+            <span className={`text-sm font-medium tracking-[-0.02em] sm:text-base ${mutedTextClass}`}>.com</span>
+          </Link>
+          <button
+            type="button"
+            onClick={onDevelopersClick}
+            className={`ml-2 border-l bg-transparent pl-3 text-sm font-medium sm:text-base ${developerClass}`}
+          >
+            Developers
+          </button>
+        </div>
+        <div className="flex min-w-0 items-center gap-2">
+          <form onSubmit={onSearchSubmit} className="relative hidden sm:block">
+            <Search className={`pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 ${isDarkMode ? "text-[#8AA5A1]" : "text-[#607A76]"}`} aria-hidden="true" />
+            <input
+              value={searchQuery}
+              onChange={(event) => onSearchChange(event.target.value)}
+              placeholder="문서 검색"
+              className={`h-9 w-48 rounded-md border py-2 pl-9 pr-3 text-sm outline-none transition focus-visible:ring-2 focus-visible:ring-[#00C8D7]/70 md:w-64 ${controlClass}`}
+            />
+          </form>
+          <button
+            type="button"
+            onClick={onToggleTheme}
+            aria-label={isDarkMode ? "라이트 모드로 전환" : "다크 모드로 전환"}
+            className={`inline-flex h-9 w-9 items-center justify-center rounded-md border transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00C8D7]/70 sm:h-10 sm:w-10 ${controlClass}`}
+          >
+            {isDarkMode ? <Sun className="h-4 w-4" aria-hidden="true" /> : <Moon className="h-4 w-4" aria-hidden="true" />}
+          </button>
+          <a
+            href={githubDownloadUrl}
+            target="_blank"
+            rel="noreferrer"
+            aria-label="GitHub에서 다운로드"
+            className={`inline-flex h-9 w-9 items-center justify-center rounded-md border shadow-[0_18px_50px_rgba(20,227,178,0.08)] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00C8D7]/70 sm:h-10 sm:w-10 ${githubClass}`}
+          >
+            <Github className="h-4 w-4" aria-hidden="true" />
+          </a>
+        </div>
+      </nav>
+    </header>
+  );
+}
+
 const base = "inline-flex items-center justify-center gap-2 cursor-pointer transition-all duration-150 select-none whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
 const sizeMap = {
   lg: { padding: "12px 24px", fontSize: "14px", height: "44px" },
@@ -32,28 +161,36 @@ const sizeMap = {
 
 function PrimaryBtn({ size = "md", label = "Continue", icon }: { size?: keyof typeof sizeMap; label?: string; icon?: React.ReactNode }) {
   const s = sizeMap[size];
-  return <button className={`${base} bg-primary text-primary-foreground rounded-md hover:opacity-90 active:scale-[0.98]`} style={{ ...s, fontWeight: 500, letterSpacing: "-0.01em" }}>{icon}{label}</button>;
+  return <button className={`${base} rounded-md active:scale-[0.98]`} style={{ ...s, fontWeight: 500, letterSpacing: "-0.01em", background: "var(--button-primary-bg)", color: "var(--button-primary-text)", border: "1px solid var(--button-primary-border)" }}>{icon}{label}</button>;
 }
 function SecondaryBtn({ size = "md", label = "Cancel" }: { size?: keyof typeof sizeMap; label?: string }) {
   const s = sizeMap[size];
-  return <button className={`${base} bg-secondary text-secondary-foreground border border-border rounded-md hover:bg-accent active:scale-[0.98]`} style={{ ...s, fontWeight: 500, letterSpacing: "-0.01em" }}>{label}</button>;
+  return <button className={`${base} rounded-md active:scale-[0.98]`} style={{ ...s, fontWeight: 500, letterSpacing: "-0.01em", background: "var(--button-secondary-bg)", color: "var(--button-secondary-text)", border: "1px solid var(--button-secondary-border)" }}>{label}</button>;
 }
 function GhostBtn({ size = "md", label = "View details" }: { size?: keyof typeof sizeMap; label?: string }) {
   const s = sizeMap[size];
-  return <button className={`${base} bg-transparent text-foreground rounded-md hover:bg-accent active:scale-[0.98]`} style={{ ...s, fontWeight: 500, letterSpacing: "-0.01em" }}>{label}</button>;
+  return <button className={`${base} rounded-md active:scale-[0.98]`} style={{ ...s, fontWeight: 500, letterSpacing: "-0.01em", background: "transparent", color: "var(--button-ghost-text)" }}>{label}</button>;
 }
 function OutlineBtn({ size = "md", label = "View details" }: { size?: keyof typeof sizeMap; label?: string }) {
   const s = sizeMap[size];
-  return <button className={`${base} bg-transparent text-foreground border border-foreground/20 rounded-md hover:border-foreground/40 hover:bg-accent active:scale-[0.98]`} style={{ ...s, fontWeight: 500, letterSpacing: "-0.01em" }}>{label}</button>;
+  return <button className={`${base} rounded-md active:scale-[0.98]`} style={{ ...s, fontWeight: 500, letterSpacing: "-0.01em", background: "transparent", color: "var(--button-ghost-text)", border: "1px solid var(--button-outline-border)" }}>{label}</button>;
 }
 function IconBtn({ icon, variant = "secondary", size = "md" }: { icon: React.ReactNode; variant?: "primary" | "secondary" | "ghost"; size?: "sm" | "md" | "lg" }) {
   const dim = size === "lg" ? "44px" : size === "md" ? "36px" : "28px";
-  const variants = { primary: "bg-primary text-primary-foreground hover:opacity-90", secondary: "bg-secondary text-foreground border border-border hover:bg-accent", ghost: "bg-transparent text-foreground hover:bg-accent" };
-  return <button className={`${base} rounded-md ${variants[variant]}`} style={{ width: dim, height: dim, padding: 0 }}>{icon}</button>;
+  const styles: Record<string, React.CSSProperties> = {
+    primary: { background: "var(--button-primary-bg)", color: "var(--button-primary-text)", border: "1px solid var(--button-primary-border)" },
+    secondary: { background: "var(--button-secondary-bg)", color: "var(--button-secondary-text)", border: "1px solid var(--button-secondary-border)" },
+    ghost: { background: "transparent", color: "var(--button-ghost-text)", border: "1px solid transparent" },
+  };
+  return <button className={`${base} rounded-md`} style={{ width: dim, height: dim, padding: 0, ...styles[variant] }}>{icon}</button>;
 }
 function RoundIconBtn({ icon, variant = "secondary" }: { icon: React.ReactNode; variant?: "primary" | "secondary" | "ghost" }) {
-  const variants = { primary: "bg-primary text-primary-foreground hover:opacity-90", secondary: "bg-secondary text-foreground border border-border hover:bg-accent", ghost: "bg-transparent text-foreground hover:bg-accent" };
-  return <button className={`${base} rounded-full ${variants[variant]}`} style={{ width: "36px", height: "36px", padding: 0 }}>{icon}</button>;
+  const styles: Record<string, React.CSSProperties> = {
+    primary: { background: "var(--button-primary-bg)", color: "var(--button-primary-text)", border: "1px solid var(--button-primary-border)" },
+    secondary: { background: "var(--button-secondary-bg)", color: "var(--button-secondary-text)", border: "1px solid var(--button-secondary-border)" },
+    ghost: { background: "transparent", color: "var(--button-ghost-text)", border: "1px solid transparent" },
+  };
+  return <button className={`${base} rounded-full`} style={{ width: "36px", height: "36px", padding: 0, ...styles[variant] }}>{icon}</button>;
 }
 function TradingBtn({ label, sub, color, hoverColor, icon, size = "md" }: { label: string; sub?: string; color: string; hoverColor: string; icon?: React.ReactNode; size?: "sm" | "md" | "lg" }) {
   const s = sizeMap[size];
@@ -66,18 +203,18 @@ function TradingBtn({ label, sub, color, hoverColor, icon, size = "md" }: { labe
 }
 function PillBtn({ label = "Confirm", size = "md" }: { label?: string; size?: "sm" | "md" | "lg" }) {
   const s = sizeMap[size];
-  return <button className={`${base} bg-primary text-primary-foreground rounded-full hover:opacity-90 active:scale-[0.98]`} style={{ ...s, fontWeight: 500 }}>{label}</button>;
+  return <button className={`${base} rounded-full active:scale-[0.98]`} style={{ ...s, fontWeight: 500, background: "var(--button-primary-bg)", color: "var(--button-primary-text)", border: "1px solid var(--button-primary-border)" }}>{label}</button>;
 }
 function SquareBtn({ label = "Confirm", size = "md" }: { label?: string; size?: "sm" | "md" | "lg" }) {
   const s = sizeMap[size];
-  return <button className={`${base} bg-primary text-primary-foreground rounded-none hover:opacity-90 active:scale-[0.98]`} style={{ ...s, fontWeight: 500 }}>{label}</button>;
+  return <button className={`${base} rounded-none active:scale-[0.98]`} style={{ ...s, fontWeight: 500, background: "var(--button-primary-bg)", color: "var(--button-primary-text)", border: "1px solid var(--button-primary-border)" }}>{label}</button>;
 }
 function SplitBtn() {
   return (
-    <div className="inline-flex rounded-md overflow-hidden border border-border">
-      <button className="px-4 bg-primary text-primary-foreground hover:opacity-90 transition-opacity" style={{ height: "36px", fontSize: "13px", fontWeight: 500 }}>Buy BTC</button>
-      <div className="w-px bg-primary/30" />
-      <button className="px-2 bg-primary text-primary-foreground hover:opacity-90 transition-opacity" style={{ height: "36px" }}><ChevronDown size={14} /></button>
+    <div className="inline-flex overflow-hidden rounded-md" style={{ border: "1px solid var(--button-primary-border)" }}>
+      <button className="px-4 transition-opacity hover:opacity-90" style={{ height: "36px", fontSize: "13px", fontWeight: 500, background: "var(--button-primary-bg)", color: "var(--button-primary-text)" }}>Buy BTC</button>
+      <div className="w-px" style={{ background: "var(--button-primary-border)" }} />
+      <button className="px-2 transition-opacity hover:opacity-90" style={{ height: "36px", background: "var(--button-primary-bg)", color: "var(--button-primary-text)" }}><ChevronDown size={14} /></button>
     </div>
   );
 }
@@ -87,7 +224,7 @@ function ButtonGroupExample() {
   return (
     <div className="inline-flex rounded-md border border-border overflow-hidden">
       {items.map((item, i) => (
-        <button key={item} onClick={() => setAct(i)} className="transition-colors" style={{ height: "32px", padding: "0 12px", fontSize: "12px", fontWeight: 500, fontFamily: "'JetBrains Mono', monospace", background: act === i ? "#0f0f11" : "#fff", color: act === i ? "#fff" : "#6b6b78", borderRight: i < items.length - 1 ? "1px solid #e8e8ec" : "none", cursor: "pointer" }}>
+        <button key={item} onClick={() => setAct(i)} className="transition-colors" style={{ height: "32px", padding: "0 12px", fontSize: "12px", fontWeight: 500, fontFamily: "'JetBrains Mono', monospace", background: act === i ? "var(--button-primary-bg)" : "var(--button-secondary-bg)", color: act === i ? "var(--button-primary-text)" : "var(--button-secondary-text)", borderRight: i < items.length - 1 ? "1px solid var(--button-secondary-border)" : "none", cursor: "pointer" }}>
           {item}
         </button>
       ))}
@@ -95,22 +232,22 @@ function ButtonGroupExample() {
   );
 }
 function TagBtn({ label, active }: { label: string; active?: boolean }) {
-  return <button className={`${base} rounded-full transition-colors`} style={{ padding: "4px 12px", fontSize: "12px", fontWeight: 500, height: "26px", background: active ? "#0f0f11" : "#f1f1f3", color: active ? "#fff" : "#6b6b78", border: active ? "none" : "1px solid #e8e8ec" }}>{label}</button>;
+  return <button className={`${base} rounded-full transition-colors`} style={{ padding: "4px 12px", fontSize: "12px", fontWeight: 500, height: "26px", background: active ? "var(--button-primary-bg)" : "var(--button-secondary-bg)", color: active ? "var(--button-primary-text)" : "var(--button-secondary-text)", border: active ? "1px solid var(--button-primary-border)" : "1px solid var(--button-secondary-border)" }}>{label}</button>;
 }
 function StateBtn({ state }: { state: "default" | "hover" | "pressed" | "disabled" | "loading" | "success" | "error" }) {
   const cfg = {
-    default: { cls: `${base} bg-primary text-primary-foreground rounded-md`, label: "Place Order", icon: null as React.ReactNode, bg: "" },
-    hover: { cls: `${base} bg-primary/85 text-primary-foreground rounded-md`, label: "Place Order", icon: null as React.ReactNode, bg: "" },
-    pressed: { cls: `${base} bg-primary/70 text-primary-foreground rounded-md scale-[0.98]`, label: "Place Order", icon: null as React.ReactNode, bg: "" },
-    disabled: { cls: `${base} bg-muted text-muted-foreground rounded-md cursor-not-allowed`, label: "Place Order", icon: null as React.ReactNode, bg: "" },
-    loading: { cls: `${base} bg-primary text-primary-foreground rounded-md cursor-wait`, label: "Processing…", icon: <Loader2 size={14} className="animate-spin" />, bg: "" },
+    default: { cls: `${base} rounded-md`, label: "Place Order", icon: null as React.ReactNode, bg: "var(--button-primary-bg)", color: "var(--button-primary-text)", border: "var(--button-primary-border)" },
+    hover: { cls: `${base} rounded-md`, label: "Place Order", icon: null as React.ReactNode, bg: "var(--button-primary-hover-bg)", color: "var(--button-primary-text)", border: "var(--button-primary-border)" },
+    pressed: { cls: `${base} rounded-md scale-[0.98]`, label: "Place Order", icon: null as React.ReactNode, bg: "var(--button-primary-pressed-bg)", color: "var(--button-primary-text)", border: "var(--button-primary-border)" },
+    disabled: { cls: `${base} rounded-md cursor-not-allowed`, label: "Place Order", icon: null as React.ReactNode, bg: "var(--button-disabled-bg)", color: "var(--button-disabled-text)", border: "var(--button-disabled-border)" },
+    loading: { cls: `${base} rounded-md cursor-wait`, label: "Processing…", icon: <Loader2 size={14} className="animate-spin" />, bg: "var(--button-primary-bg)", color: "var(--button-primary-text)", border: "var(--button-primary-border)" },
     success: { cls: `${base} rounded-md text-white`, label: "Order Filled", icon: <Check size={14} />, bg: "#1a7a4a" },
     error: { cls: `${base} rounded-md text-white`, label: "Order Failed", icon: <AlertCircle size={14} />, bg: "#c8102e" },
   }[state];
-  return <button className={cfg.cls} disabled={state === "disabled"} style={{ padding: "8px 16px", fontSize: "13px", height: "36px", fontWeight: 500, letterSpacing: "-0.01em", ...(cfg.bg ? { background: cfg.bg } : {}) }}>{cfg.icon}{cfg.label}</button>;
+  return <button className={cfg.cls} disabled={state === "disabled"} style={{ padding: "8px 16px", fontSize: "13px", height: "36px", fontWeight: 500, letterSpacing: "-0.01em", background: cfg.bg, color: "color" in cfg ? cfg.color : undefined, border: "border" in cfg ? `1px solid ${cfg.border}` : undefined }}>{cfg.icon}{cfg.label}</button>;
 }
 function WireframeBtn({ label, dashed }: { label: string; dashed?: boolean }) {
-  return <button className={`${base} rounded-md`} style={{ padding: "8px 16px", fontSize: "13px", height: "36px", fontWeight: 400, background: "transparent", color: "#9999aa", border: dashed ? "1.5px dashed #c4c4cc" : "1.5px solid #e2e2e6", fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.02em" }}>{label}</button>;
+  return <button className={`${base} rounded-md`} style={{ padding: "8px 16px", fontSize: "13px", height: "36px", fontWeight: 400, background: "transparent", color: "var(--button-disabled-text)", border: dashed ? "1.5px dashed var(--button-disabled-border)" : "1.5px solid var(--button-outline-border)", fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.02em" }}>{label}</button>;
 }
 function EmptyBox({ w = 120, h = 36, label }: { w?: number; h?: number; label?: string }) {
   return (
@@ -139,6 +276,11 @@ function MinimalBtn() { return <button className={`${base} rounded-md`} style={{
 function GlassBtn() {
   return <button className={`${base} rounded-md`} style={{ padding: "8px 16px", fontSize: "13px", height: "36px", fontWeight: 500, background: "rgba(255,255,255,0.55)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.8)", color: "#0f0f11", boxShadow: "0 1px 3px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.9)" }}>Glassmorphism</button>;
 }
+function DarkFilledBtn() { return <button className={`${base} rounded-md hover:opacity-90`} style={{ ...sizeMap.md, fontWeight: 500, background: "#F4F7F6", color: "#061514", border: "1px solid rgba(255,255,255,0.2)" }}>Continue</button>; }
+function DarkOutlineBtn() { return <button className={`${base} rounded-md hover:bg-white/10`} style={{ ...sizeMap.md, fontWeight: 500, background: "transparent", color: "#F2FFFB", border: "1px solid rgba(242,255,251,0.32)" }}>Cancel</button>; }
+function DarkGhostBtn() { return <button className={`${base} rounded-md hover:bg-white/10`} style={{ ...sizeMap.md, fontWeight: 500, background: "transparent", color: "#B8D6D0" }}>Dismiss</button>; }
+function DarkSoftBtn() { return <button className={`${base} rounded-md hover:bg-white/15`} style={{ ...sizeMap.md, fontWeight: 500, background: "rgba(242,255,251,0.1)", color: "#F2FFFB", border: "1px solid rgba(242,255,251,0.12)" }}>View Chart</button>; }
+function DarkGlassBtn() { return <button className={`${base} rounded-md`} style={{ ...sizeMap.md, fontWeight: 500, background: "rgba(255,255,255,0.07)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.14)", color: "#F2FFFB" }}>Place Order</button>; }
 
 function ButtonShowcaseSection({ section }: { section: string }) {
   if (section === "primary") return (
@@ -302,25 +444,25 @@ function ButtonShowcaseSection({ section }: { section: string }) {
   if (section === "variations") return (
     <section className="mb-20">
       <SectionHeader label="08 — Style" title="Button Variations" description="다양한 UI 환경에 대응하기 위한 버튼 스타일 변형입니다. Filled, Outline, Soft, Glass, Minimal 등의 스타일을 통해 상황에 맞는 시각적 강조 수준을 제공합니다." />
-      <div className="rounded-xl p-8 mb-6" style={{ background: "linear-gradient(135deg, #f8f8f9 0%, #ebebef 100%)", border: "1px solid #e2e2e6" }}>
-        <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "10px", letterSpacing: "0.08em" }} className="uppercase text-muted-foreground mb-5">On light surface</p>
+      <div className="mb-6 rounded-xl p-8" style={{ background: "var(--surface-light)", border: "1px solid rgba(6,21,20,0.12)" }}>
+        <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "10px", letterSpacing: "0.08em", color: "#607A76" }} className="mb-5 uppercase">On light surface</p>
         <div className="flex flex-wrap items-center gap-4">
           <ButtonCell label="Filled"><FilledBtn /></ButtonCell>
-          <ButtonCell label="Outline"><OutlineBtn /></ButtonCell>
+          <ButtonCell label="Outline"><button className={`${base} rounded-md`} style={{ ...sizeMap.md, fontWeight: 500, background: "transparent", color: "#0f0f11", border: "1px solid rgba(15,15,17,0.22)" }}>View details</button></ButtonCell>
           <ButtonCell label="Soft"><SoftBtn /></ButtonCell>
-          <ButtonCell label="Ghost"><GhostBtn /></ButtonCell>
+          <ButtonCell label="Ghost"><button className={`${base} rounded-md hover:bg-black/5`} style={{ ...sizeMap.md, fontWeight: 500, background: "transparent", color: "#0f0f11" }}>View details</button></ButtonCell>
           <ButtonCell label="Minimal"><MinimalBtn /></ButtonCell>
           <ButtonCell label="Glassmorphism"><GlassBtn /></ButtonCell>
         </div>
       </div>
-      <div className="rounded-xl p-8" style={{ background: "#0f0f11", border: "1px solid #1e1e24" }}>
-        <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "10px", letterSpacing: "0.08em", color: "#6b6b78" }} className="uppercase mb-5">On dark surface</p>
+      <div className="rounded-xl p-8" style={{ background: "var(--surface-dark)", border: "1px solid rgba(242,255,251,0.12)" }}>
+        <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "10px", letterSpacing: "0.08em", color: "#8AA5A1" }} className="mb-5 uppercase">On dark surface</p>
         <div className="flex flex-wrap items-center gap-4">
-          <ButtonCell label={<span className="text-zinc-500">White Fill</span>}><button className={`${base} rounded-md hover:opacity-90`} style={{ ...sizeMap.md, fontWeight: 500, background: "#fff", color: "#0f0f11" }}>Continue</button></ButtonCell>
-          <ButtonCell label={<span className="text-zinc-500">Outline</span>}><button className={`${base} rounded-md hover:bg-white/10`} style={{ ...sizeMap.md, fontWeight: 500, background: "transparent", color: "#fff", border: "1px solid rgba(255,255,255,0.25)" }}>Cancel</button></ButtonCell>
-          <ButtonCell label={<span className="text-zinc-500">Ghost</span>}><button className={`${base} rounded-md hover:bg-white/10`} style={{ ...sizeMap.md, fontWeight: 500, background: "transparent", color: "#9999aa" }}>Dismiss</button></ButtonCell>
-          <ButtonCell label={<span className="text-zinc-500">Soft White</span>}><button className={`${base} rounded-md hover:bg-white/15`} style={{ ...sizeMap.md, fontWeight: 500, background: "rgba(255,255,255,0.1)", color: "#fff" }}>View Chart</button></ButtonCell>
-          <ButtonCell label={<span className="text-zinc-500">Glass Dark</span>}><button className={`${base} rounded-md`} style={{ ...sizeMap.md, fontWeight: 500, background: "rgba(255,255,255,0.07)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.12)", color: "#fff" }}>Place Order</button></ButtonCell>
+          <ButtonCell label={<span className="text-[#8AA5A1]">White Fill</span>}><DarkFilledBtn /></ButtonCell>
+          <ButtonCell label={<span className="text-[#8AA5A1]">Outline</span>}><DarkOutlineBtn /></ButtonCell>
+          <ButtonCell label={<span className="text-[#8AA5A1]">Ghost</span>}><DarkGhostBtn /></ButtonCell>
+          <ButtonCell label={<span className="text-[#8AA5A1]">Soft White</span>}><DarkSoftBtn /></ButtonCell>
+          <ButtonCell label={<span className="text-[#8AA5A1]">Glass Dark</span>}><DarkGlassBtn /></ButtonCell>
         </div>
       </div>
     </section>
@@ -404,9 +546,10 @@ function ButtonShowcaseSection({ section }: { section: string }) {
 }
 
 export function DesignSystemPage() {
-  const [active, setActive] = useState("primary");
+  const [active, setActive] = useState("installation-guide");
+  const [isDarkMode, setIsDarkMode] = useState(getInitialDevelopersTheme);
+  const [searchQuery, setSearchQuery] = useState("");
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
-  const mainRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const obs = new IntersectionObserver(
@@ -415,88 +558,270 @@ export function DesignSystemPage() {
           if (entry.isIntersecting) { setActive(entry.target.id); break; }
         }
       },
-      { root: mainRef.current, rootMargin: "-20% 0px -70% 0px", threshold: 0 }
+      { root: null, rootMargin: "-20% 0px -70% 0px", threshold: 0 }
     );
     Object.values(sectionRefs.current).forEach((el) => el && obs.observe(el));
     return () => obs.disconnect();
   }, []);
 
+  useEffect(() => {
+    const scrollToHash = () => {
+      const id = window.location.hash.replace("#", "");
+      if (!id) return;
+
+      window.setTimeout(() => {
+        const el = sectionRefs.current[id] ?? document.getElementById(id);
+        if (!el) return;
+        window.scrollTo({ top: el.offsetTop - 88, behavior: "smooth" });
+      }, 0);
+    };
+
+    scrollToHash();
+    window.addEventListener("hashchange", scrollToHash);
+    return () => window.removeEventListener("hashchange", scrollToHash);
+  }, []);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const syncSystemTheme = (event: MediaQueryListEvent) => {
+      if (window.localStorage.getItem(developersThemeStorageKey)) return;
+      setIsDarkMode(event.matches);
+    };
+
+    mediaQuery.addEventListener("change", syncSystemTheme);
+    return () => mediaQuery.removeEventListener("change", syncSystemTheme);
+  }, []);
+
   const scrollTo = (id: string) => {
     const el = sectionRefs.current[id];
-    if (!el || !mainRef.current) return;
-    mainRef.current.scrollTo({ top: el.offsetTop - 80, behavior: "smooth" });
+    if (!el) return;
+    window.scrollTo({ top: el.offsetTop - 88, behavior: "smooth" });
   };
 
+  const registerSection = (id: string) => (el: HTMLElement | null) => {
+    sectionRefs.current[id] = el;
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const toggleTheme = () => {
+    setIsDarkMode((value) => {
+      const nextValue = !value;
+      window.localStorage.setItem(developersThemeStorageKey, nextValue ? "dark" : "light");
+      return nextValue;
+    });
+  };
+
+  const isSidebarActive = (id: string) => {
+    if (id === "design-guide") {
+      return active === "design-guide" || NAV_ITEMS.some((item) => item.id === active);
+    }
+
+    return active === id;
+  };
+
+  const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const normalizedQuery = searchQuery.trim().toLowerCase();
+    if (!normalizedQuery) return;
+
+    const match = SEARCH_ITEMS.find((item) => (
+      item.label.toLowerCase().includes(normalizedQuery) || item.id.toLowerCase().includes(normalizedQuery)
+    ));
+
+    if (match) {
+      scrollTo(match.id);
+    }
+  };
+
+  const pageClass = isDarkMode
+    ? "bg-[#020f0f] text-[#F2FFFB] [--background:#020f0f] [--foreground:#F2FFFB] [--card:#071416] [--card-foreground:#F2FFFB] [--popover:#071416] [--popover-foreground:#F2FFFB] [--primary:#F4F7F6] [--primary-foreground:#061514] [--secondary:#0B2021] [--secondary-foreground:#D8FFF6] [--muted:#102224] [--muted-foreground:#8AA5A1] [--accent:#123133] [--accent-foreground:#F2FFFB] [--border:rgba(255,255,255,0.1)] [--ring:rgba(0,200,215,0.7)] [--button-primary-bg:#F4F7F6] [--button-primary-hover-bg:#FFFFFF] [--button-primary-pressed-bg:#D8E4E1] [--button-primary-text:#061514] [--button-primary-border:rgba(255,255,255,0.24)] [--button-secondary-bg:#0B2021] [--button-secondary-text:#D8FFF6] [--button-secondary-border:rgba(216,255,246,0.16)] [--button-outline-border:rgba(216,255,246,0.28)] [--button-ghost-text:#D8FFF6] [--button-disabled-bg:#102224] [--button-disabled-text:#66817C] [--button-disabled-border:rgba(216,255,246,0.1)] [--surface-light:#F8FAF9] [--surface-dark:#0F1718]"
+    : "bg-[#F4F7F6] text-[#06201F] [--background:#F4F7F6] [--foreground:#06201F] [--card:#FFFFFF] [--card-foreground:#06201F] [--popover:#FFFFFF] [--popover-foreground:#06201F] [--primary:#111111] [--primary-foreground:#FFFFFF] [--secondary:#EDF2F1] [--secondary-foreground:#173432] [--muted:#E4EBEA] [--muted-foreground:#607A76] [--accent:#E8EEED] [--accent-foreground:#06201F] [--border:oklch(0.74_0.02_180_/_0.5)] [--ring:oklch(0.64_0.14_190_/_0.42)] [--button-primary-bg:#111111] [--button-primary-hover-bg:#252525] [--button-primary-pressed-bg:#3A3A3A] [--button-primary-text:#FFFFFF] [--button-primary-border:rgba(0,0,0,0.12)] [--button-secondary-bg:#EDF2F1] [--button-secondary-text:#173432] [--button-secondary-border:rgba(6,21,20,0.12)] [--button-outline-border:rgba(6,21,20,0.22)] [--button-ghost-text:#06201F] [--button-disabled-bg:#E4EBEA] [--button-disabled-text:#80938F] [--button-disabled-border:rgba(6,21,20,0.08)] [--surface-light:#F8FAF9] [--surface-dark:#0F1718]";
+  const sidebarClass = isDarkMode ? "border-white/8 bg-[#020f0f]" : "border-black/8 bg-[#F4F7F6]";
+  const mutedClass = isDarkMode ? "text-[#A8C7C1]" : "text-[#254441]/68";
+  const strongMutedClass = isDarkMode ? "text-[#D8FFF6]/78" : "text-[#254441]/74";
+  const eyebrowClass = isDarkMode ? "text-[#14E3B2]" : "text-[#008A94]";
+  const dividerClass = isDarkMode ? "border-white/10" : "border-border";
+  const navItemClass = (isActive: boolean) => isActive
+    ? isDarkMode ? "bg-white/8 text-[#F2FFFB]" : "bg-secondary text-[#06201F]"
+    : isDarkMode ? "text-[#A8C7C1] hover:bg-white/6 hover:text-[#F2FFFB]" : "text-[#254441]/66 hover:bg-secondary/70 hover:text-[#06201F]";
+  const mobileNavItemClass = (isActive: boolean) => isActive
+    ? isDarkMode ? "border-white/14 bg-white/8 text-[#F2FFFB]" : "border-[#111111]/20 bg-white text-[#06201F]"
+    : isDarkMode ? "border-white/10 bg-transparent text-[#A8C7C1] hover:bg-white/6 hover:text-[#F2FFFB]" : "border-slate-900/10 bg-transparent text-[#254441]/68 hover:bg-white/70 hover:text-[#06201F]";
+
   return (
-    <div className="flex size-full" style={{ fontFamily: "'Inter', system-ui, -apple-system, sans-serif", background: "#f8f8f9" }}>
-      {/* Sidebar */}
-      <aside className="flex-none flex flex-col" style={{ width: "240px", minHeight: "100vh", background: "#ffffff", borderRight: "1px solid rgba(0,0,0,0.07)", position: "sticky", top: 0, height: "100vh", overflowY: "auto" }}>
-        <div className="flex items-center gap-2 px-6" style={{ height: "60px", borderBottom: "1px solid rgba(0,0,0,0.06)" }}>
-          <ImageWithFallback src={logoImage} alt="Eukk Trade logo" style={{ width: "22px", height: "22px", borderRadius: "4px", flexShrink: 0, objectFit: "contain" }} />
-          <div>
-            <p style={{ fontSize: "12px", fontWeight: 600, color: "#0f0f11", letterSpacing: "-0.01em", lineHeight: 1.3 }}>FinDSys</p>
-            <p style={{ fontSize: "10px", color: "#9999aa", letterSpacing: "0.02em", fontFamily: "'JetBrains Mono', monospace", lineHeight: 1.3 }}>Button Explorer</p>
-          </div>
-        </div>
-        <nav className="flex-1 px-3 py-5">
-          <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "10px", letterSpacing: "0.08em", color: "#aaaabc", paddingLeft: "12px", marginBottom: "8px" }} className="uppercase">Components</p>
-          <ul className="space-y-0.5">
-            {NAV_ITEMS.map((item) => (
-              <li key={item.id}>
-                <button onClick={() => scrollTo(item.id)} className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-left transition-colors" style={{ fontSize: "13px", fontWeight: active === item.id ? 500 : 400, color: active === item.id ? "#0f0f11" : "#6b6b78", background: active === item.id ? "#f1f1f3" : "transparent", cursor: "pointer", border: "none" }}>
-                  <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "10px", color: active === item.id ? "#0f0f11" : "#c4c4cc", minWidth: "20px" }}>{item.index}</span>
-                  {item.label}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </nav>
-        <div className="px-6 py-4" style={{ borderTop: "1px solid rgba(0,0,0,0.06)" }}>
-          <p style={{ fontSize: "11px", color: "#c4c4cc", fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.03em" }}>v1.0 · Design System</p>
-          <p style={{ fontSize: "11px", color: "#c4c4cc", fontFamily: "'JetBrains Mono', monospace", marginTop: "2px" }}>Prototype Playground</p>
-          <Link to="/" style={{ display: "block", marginTop: "12px", fontSize: "11px", color: "#9999aa", fontFamily: "'JetBrains Mono', monospace", textDecoration: "none" }}>← 홈으로</Link>
-        </div>
-      </aside>
+    <div
+      className={`min-h-screen transition-colors duration-200 ${pageClass}`}
+      style={{ fontFamily: "'Inter', system-ui, -apple-system, sans-serif" }}
+    >
+      <DesignGuideHeader
+        isDarkMode={isDarkMode}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        onSearchSubmit={handleSearchSubmit}
+        onToggleTheme={toggleTheme}
+        onDevelopersClick={scrollToTop}
+      />
 
-      {/* Main */}
-      <main ref={mainRef} className="flex-1 overflow-y-auto" style={{ height: "100vh" }}>
-        <div className="flex items-center justify-between px-12" style={{ height: "60px", background: "#ffffff", borderBottom: "1px solid rgba(0,0,0,0.07)", position: "sticky", top: 0, zIndex: 10 }}>
-          <div>
-            <h1 style={{ fontSize: "14px", fontWeight: 600, color: "#0f0f11", letterSpacing: "-0.01em" }}>EUKK TRADE 개발자 디자인 가이드</h1>
-            <p style={{ fontSize: "11px", color: "#9999aa", fontFamily: "'JetBrains Mono', monospace", marginTop: "1px" }}>Eukk Trade — Component Prototype</p>
-          </div>
-          <div className="flex items-center gap-2">
-            <span style={{ fontSize: "11px", fontFamily: "'JetBrains Mono', monospace", color: "#6b6b78", background: "#f1f1f3", border: "1px solid #e2e2e6", borderRadius: "4px", padding: "3px 8px" }}>1440px canvas</span>
-            <span style={{ fontSize: "11px", fontFamily: "'JetBrains Mono', monospace", color: "#16a34a", background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: "4px", padding: "3px 8px" }}>Prototype</span>
-          </div>
-        </div>
-
-        <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "64px 64px 120px" }}>
-          <div className="mb-16">
-            <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "11px", letterSpacing: "0.08em", color: "#9999aa" }} className="uppercase mb-3">UX/UI Component Prototype · Button Library</p>
-            <h1 style={{ fontSize: "36px", fontWeight: 700, color: "#0f0f11", letterSpacing: "-0.03em", lineHeight: 1.1, whiteSpace: "nowrap" }}>자동매매기 버튼 디자인 & 레이아웃 프로토타입 가이드</h1>
-            <p style={{ fontSize: "14px", color: "#6b6b78", marginTop: "16px", maxWidth: "780px", lineHeight: 1.65 }}>
-              EukkTrade의 인터페이스 품질을 유지하기 위한 공식 UI 가이드라인입니다.<br />
-              본 문서는 디자인 시스템의 핵심 원칙과 컴포넌트 사양을 정의하며, 각 UI 요소의 크기, 간격, 상태 변화 및 상호작용 규칙을 포함합니다.<br />
-              개발 과정에서 모든 화면은 본 가이드라인을 기준으로 설계 및 구현되어야 하며, 신규 기능 추가 시에도 동일한 디자인 원칙을 준수해야 합니다.
-            </p>
-            <div className="flex items-center gap-5 mt-6">
-              {[["10", "Sections"], ["50+", "Button variants"], ["7", "States per variant"], ["3", "Size scales"]].map(([val, lbl]) => (
-                <div key={lbl} className="flex flex-col">
-                  <span style={{ fontSize: "18px", fontWeight: 700, color: "#0f0f11", letterSpacing: "-0.02em", fontFamily: "'JetBrains Mono', monospace" }}>{val}</span>
-                  <span style={{ fontSize: "11px", color: "#9999aa", letterSpacing: "0.02em" }}>{lbl}</span>
+      <main className="grid w-full lg:grid-cols-[240px_minmax(0,1fr)]">
+        <aside className={`hidden border-r transition-colors duration-200 lg:block ${sidebarClass}`}>
+          <nav className="sticky top-16 px-5 py-8" aria-label="Developer documentation">
+            <p className="mb-4 px-2 font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Documentation</p>
+            <div className="space-y-1">
+              {DOC_NAV_ITEMS.map((item) => (
+                <div key={item.id}>
+                  <button
+                    onClick={() => scrollTo(item.id)}
+                    className={`block w-full rounded-md px-2 py-2 text-left text-sm transition ${navItemClass(isSidebarActive(item.id))}`}
+                  >
+                    {item.label}
+                  </button>
+                  {item.id === "design-guide" && (
+                    <div className="mt-1 space-y-1 pl-4">
+                      {[
+                        { id: "buttons", label: "Buttons" },
+                        { id: "states", label: "Button States" },
+                        { id: "trading", label: "Trading Actions" },
+                      ].map((anchor) => (
+                        <button
+                          key={anchor.id}
+                          onClick={() => scrollTo(anchor.id)}
+                          className={`block w-full rounded-md px-2 py-1.5 text-left text-xs transition ${navItemClass(active === anchor.id || (anchor.id === "buttons" && BASIC_BUTTON_SECTIONS.includes(active)))}`}
+                        >
+                          {anchor.label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
-          </div>
-          <div style={{ height: "1px", background: "rgba(0,0,0,0.07)", marginBottom: "64px" }} />
-          {NAV_ITEMS.map((item) => (
-            <section key={item.id} id={item.id} ref={(el) => { sectionRefs.current[item.id] = el; }}>
-              <ButtonShowcaseSection section={item.id} />
+          </nav>
+        </aside>
+
+        <div className="min-w-0 px-5 py-8 md:px-8 lg:px-10 lg:py-10">
+          <nav className="mb-8 flex gap-2 overflow-x-auto border-b border-border pb-4 lg:hidden" aria-label="Design guide sections">
+            {DOC_NAV_ITEMS.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => scrollTo(item.id)}
+                className={`shrink-0 rounded-md border px-3 py-2 text-left text-xs transition ${mobileNavItemClass(isSidebarActive(item.id))}`}
+              >
+                {item.label}
+              </button>
+            ))}
+          </nav>
+
+          <div className="w-full">
+            <div id="top" className={`scroll-mt-24 border-b pb-10 ${dividerClass}`}>
+              <p className={`font-mono text-[11px] uppercase tracking-[0.16em] ${eyebrowClass}`}>EUKK TRADE Developers</p>
+              <h1 className="mt-4 text-[clamp(3rem,5vw,3.5rem)] font-semibold leading-[1.05] tracking-[-0.05em] text-foreground">
+                EUKK TRADE Developers
+              </h1>
+              <p className={`mt-5 max-w-3xl text-base leading-7 ${strongMutedClass}`}>
+                EUKK TRADE의 설치, 개발, 디자인 기준을 한 곳에서 확인할 수 있는 개발자 문서입니다.
+              </p>
+              <p className={`mt-4 max-w-4xl text-[15px] leading-7 ${mutedClass}`}>
+                본 문서는 프로젝트 진행 과정에서 필요한 설치 가이드, 개발 가이드, 디자인 가이드를 정리하기 위한 공간입니다. 현재 일부 항목은 준비 중이며, 실제 구현 상황에 맞춰 지속적으로 갱신됩니다.
+              </p>
+            </div>
+
+            <section id="installation-guide" ref={registerSection("installation-guide")} className={`scroll-mt-24 border-b py-10 ${dividerClass}`}>
+              <p className={`font-mono text-[11px] uppercase tracking-[0.16em] ${eyebrowClass}`}>Documentation</p>
+              <h2 className="mt-3 text-[clamp(1.75rem,3vw,2rem)] font-semibold tracking-[-0.03em]">Installation Guide</h2>
+              <p className={`mt-4 max-w-3xl text-[15px] leading-7 ${mutedClass}`}>
+                EUKK TRADE를 실행하기 위한 설치 흐름과 초기 설정 항목을 정리하는 공간입니다.
+              </p>
+              <div className="mt-8 grid gap-4 md:grid-cols-2">
+                {INSTALLATION_PLACEHOLDERS.map((title) => (
+                  <div key={title} className={`rounded-lg border p-5 ${isDarkMode ? "border-white/10 bg-white/4" : "border-black/8 bg-white"}`}>
+                    <h3 className="text-lg font-semibold tracking-[-0.02em]">{title}</h3>
+                    <p className={`mt-3 text-[15px] leading-7 ${mutedClass}`}>해당 항목은 실제 배포 방식과 운영 환경이 확정된 뒤 갱신됩니다.</p>
+                  </div>
+                ))}
+              </div>
             </section>
-          ))}
+
+            <section id="development-guide" ref={registerSection("development-guide")} className={`scroll-mt-24 border-b py-10 ${dividerClass}`}>
+              <p className={`font-mono text-[11px] uppercase tracking-[0.16em] ${eyebrowClass}`}>Guides</p>
+              <h2 className="mt-3 text-[clamp(1.75rem,3vw,2rem)] font-semibold tracking-[-0.03em]">Development Guide</h2>
+              <p className={`mt-4 max-w-3xl text-[15px] leading-7 ${mutedClass}`}>
+                EUKK TRADE의 개발 구조, 작업 규칙, 배포 흐름을 정리하는 공간입니다.
+              </p>
+              <div className="mt-8 grid gap-4 md:grid-cols-2">
+                {DEVELOPMENT_PLACEHOLDERS.map((title) => (
+                  <div key={title} className={`rounded-lg border p-5 ${isDarkMode ? "border-white/10 bg-white/4" : "border-black/8 bg-white"}`}>
+                    <h3 className="text-lg font-semibold tracking-[-0.02em]">{title}</h3>
+                    <p className={`mt-3 text-[15px] leading-7 ${mutedClass}`}>프로젝트 운영 방식에 맞춰 추후 상세 내용을 추가합니다.</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <section id="design-guide" ref={registerSection("design-guide")} className={`scroll-mt-24 border-b py-10 ${dividerClass}`}>
+              <p className={`font-mono text-[11px] uppercase tracking-[0.16em] ${eyebrowClass}`}>Documentation</p>
+              <h2 className="mt-3 text-[clamp(1.75rem,3vw,2rem)] font-semibold tracking-[-0.03em]">Design Guide</h2>
+              <p className={`mt-4 max-w-3xl text-[15px] leading-7 ${mutedClass}`}>
+                EUKK TRADE의 UI 컴포넌트, 스타일 규칙, 인터랙션 기준을 정리한 디자인 가이드입니다.
+              </p>
+              <p className={`mt-4 max-w-4xl text-[15px] leading-7 ${mutedClass}`}>
+                EukkTrade의 인터페이스 품질을 유지하기 위한 공식 UI 가이드라인입니다. 본 문서는 디자인 시스템의 핵심 원칙과 컴포넌트 사양을 정의하며, 각 UI 요소의 크기, 간격, 상태 변화 및 상호작용 규칙을 포함합니다.
+              </p>
+            </section>
+
+            <section className="py-10">
+              <div className="mb-10">
+                <p className={`font-mono text-[11px] uppercase tracking-[0.16em] ${eyebrowClass}`}>Buttons</p>
+                <h2 className="mt-3 text-2xl font-semibold tracking-[-0.03em]">Buttons</h2>
+              </div>
+
+              <section id="buttons" ref={registerSection("buttons")} className={`scroll-mt-24 border-b pb-8 ${dividerClass}`}>
+                <h3 className="mb-8 text-xl font-semibold tracking-[-0.03em]">Basic Buttons</h3>
+                {BASIC_BUTTON_SECTIONS.map((section) => (
+                  <section key={section} id={section} ref={registerSection(section)} className={`scroll-mt-24 border-b py-4 last:border-b-0 ${dividerClass}`}>
+                    <ButtonShowcaseSection section={section} />
+                  </section>
+                ))}
+              </section>
+
+              <section id="states" ref={registerSection("states")} className={`scroll-mt-24 border-b py-10 ${dividerClass}`}>
+                <h3 className="mb-8 text-xl font-semibold tracking-[-0.03em]">Button States</h3>
+                <ButtonShowcaseSection section="states" />
+              </section>
+
+              <section id="trading" ref={registerSection("trading")} className="scroll-mt-24 py-10">
+                <h3 className="mb-8 text-xl font-semibold tracking-[-0.03em]">Trading Actions</h3>
+                <ButtonShowcaseSection section="trading" />
+              </section>
+            </section>
+          </div>
         </div>
       </main>
+
+      <footer className={`border-t px-5 py-8 md:px-8 ${isDarkMode ? "border-white/8 bg-[#020f0f]" : "border-black/8 bg-[#F4F7F6]"}`}>
+        <div className="flex w-full flex-col gap-5 md:flex-row md:items-center md:justify-between">
+          <div>
+            <ProjectLogo surface={isDarkMode ? "dark" : "light"} className="h-8 w-auto object-contain opacity-90" />
+            <p className="mt-4 font-semibold tracking-[-0.02em]">EUKK TRADE Developers</p>
+            <p className={`mt-2 text-sm ${mutedClass}`}>Documentation for installation, development, and design guidelines.</p>
+          </div>
+          <div className="flex items-center gap-5">
+            <Link to="/" className={`text-sm font-medium ${isDarkMode ? "text-[#14E3B2] hover:text-[#F2FFFB]" : "text-[#008A94] hover:text-[#06201F]"}`}>
+              Home
+            </Link>
+            <a
+              href={githubDownloadUrl}
+              target="_blank"
+              rel="noreferrer"
+              className={`text-sm font-medium ${isDarkMode ? "text-[#14E3B2] hover:text-[#F2FFFB]" : "text-[#008A94] hover:text-[#06201F]"}`}
+            >
+              GitHub
+            </a>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
