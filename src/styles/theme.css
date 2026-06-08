@@ -186,3 +186,15 @@
     line-height: 1.5;
   }
 }
+
+@keyframes scrollHint {
+  0%, 100% {
+    opacity: 0.42;
+    transform: translateY(0);
+  }
+
+  50% {
+    opacity: 0.78;
+    transform: translateY(6px);
+  }
+}
