@@ -733,6 +733,20 @@ export function Homepage() {
               </div>
             </div>
             <div className="mt-8 border-t border-white/10 pt-6 font-mono text-[11px] uppercase tracking-[0.14em] text-[#8AA5A1]">© 2026 EUKK TRADE</div>
+            <div className="mt-6 border-t border-white/8 pt-6">
+              <div className="max-w-3xl">
+                <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-[#8AA5A1]">NOTICE</p>
+                <p className="mt-3 max-w-2xl text-sm leading-6 text-[#A8C7C1] md:text-[15px]">
+                  EUKK TRADE는 개인 연구 및 개발 프로젝트입니다.
+                </p>
+                <p className="mt-2 max-w-2xl text-sm leading-6 text-[#A8C7C1] md:text-[15px]">
+                  본 사이트 및 문서는 투자 권유, 투자 자문, 금융 상품 판매를 목적으로 하지 않습니다.
+                </p>
+                <p className="mt-2 max-w-2xl text-sm leading-6 text-[#A8C7C1] md:text-[15px]">
+                  모든 투자 판단과 책임은 이용자 본인에게 있으며, 개발자는 투자 결과에 대해 책임을 지지 않습니다.
+                </p>
+              </div>
+            </div>
           </footer>
         </div>
       </section>
