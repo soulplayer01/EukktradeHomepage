@@ -238,6 +238,7 @@ export function Homepage() {
   const currentSectionRef = useRef(0);
   const cooldownRef = useRef(false);
   const wheelBurstRef = useRef({ delta: 0, lastTime: 0 });
+  const macTrackpadLockUntilRef = useRef(0);
 
   useEffect(() => {
     const hero = document.getElementById("hero");
@@ -275,6 +276,21 @@ export function Homepage() {
         .map(([id]) => document.getElementById(id))
         .filter((section): section is HTMLElement => Boolean(section));
 
+    const isMacPlatform = (() => {
+      const platform = navigator.platform.toLowerCase();
+      const userAgent = navigator.userAgent.toLowerCase();
+      return platform.includes("mac") || userAgent.includes("macintosh");
+    })();
+
+    const isLikelyTrackpadWheel = (event: WheelEvent) => {
+      const absDeltaY = Math.abs(event.deltaY);
+
+      return (
+        event.deltaMode === 0 &&
+        (absDeltaY % 1 !== 0 || absDeltaY < 30 || Math.abs(event.deltaX) > 0)
+      );
+    };
+
     const syncCurrentSection = () => {
       const sections = getSections();
       if (sections.length === 0) {
@@ -296,6 +312,19 @@ export function Homepage() {
         return;
       }
 
+      const now = Date.now();
+      const absDelta = Math.abs(event.deltaY);
+      const direction = event.deltaY > 0 ? 1 : -1;
+      const isMacTrackpadGesture = isMacPlatform && isLikelyTrackpadWheel(event);
+
+      // macOS trackpad inertial scroll guard
+      // Keep the existing snap feel for Windows while ignoring tiny residual wheel
+      // deltas that can arrive right after a section transition on macOS trackpads.
+      if (isMacTrackpadGesture && now < macTrackpadLockUntilRef.current && absDelta < 30) {
+        event.preventDefault();
+        return;
+      }
+
       if (cooldownRef.current) {
         return;
       }
@@ -307,10 +336,6 @@ export function Homepage() {
 
       event.preventDefault();
       syncCurrentSection();
-
-      const now = Date.now();
-      const absDelta = Math.abs(event.deltaY);
-      const direction = event.deltaY > 0 ? 1 : -1;
 
       if (now - wheelBurstRef.current.lastTime > 180) {
         wheelBurstRef.current.delta = 0;
@@ -329,9 +354,16 @@ export function Homepage() {
       currentSectionRef.current = nextIndex;
       sections[nextIndex].scrollIntoView({ behavior: "smooth", block: "start" });
 
+      if (isMacTrackpadGesture) {
+        macTrackpadLockUntilRef.current = now + 620;
+      }
+
       window.setTimeout(() => {
         cooldownRef.current = false;
         wheelBurstRef.current.delta = 0;
+        if (macTrackpadLockUntilRef.current <= Date.now()) {
+          macTrackpadLockUntilRef.current = 0;
+        }
         syncCurrentSection();
       }, 450);
     };
