@@ -14,11 +14,11 @@ function getInitialDevelopersTheme() {
   return window.matchMedia("(prefers-color-scheme: dark)").matches;
 }
 
-function ProjectLogo({ surface = "light", className = "" }: { surface?: "light" | "dark"; className?: string }) {
+function ProjectLogo({ className = "" }: { className?: string }) {
   return (
     <img
-      src={surface === "dark" ? "/project-logo-white.svg" : "/project-logo-black.svg"}
-      alt="EUKK TRADE Project Logo"
+      src="/app-logo.svg"
+      alt="EUKK TRADE Logo"
       className={className}
     />
   );
@@ -89,6 +89,15 @@ export function DesignSystemPage() {
     window.scrollTo({ top: element.offsetTop - 88, behavior: "smooth" });
   };
 
+  const scrollToTop = () => {
+    const element = sectionRefs.current["top"];
+    if (element) {
+      window.scrollTo({ top: element.offsetTop - 88, behavior: "smooth" });
+      return;
+    }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   const registerSection = (id: string) => (element: HTMLElement | null) => {
     sectionRefs.current[id] = element;
   };
@@ -119,10 +128,10 @@ export function DesignSystemPage() {
       <header className={`sticky top-0 z-50 border-b ${isDarkMode ? "border-white/8 bg-[#020f0f]" : "border-black/8 bg-[#F4F7F6]"}`}>
         <div className="flex h-16 items-center justify-between gap-3 px-4 sm:px-5 lg:px-8">
           <div className="flex items-center gap-3">
-            <Link to="/" className="flex items-center gap-2" aria-label="EUKK TRADE 홈페이지로 이동">
-              <ProjectLogo surface={isDarkMode ? "dark" : "light"} className="h-6 w-auto object-contain" />
+            <button type="button" onClick={scrollToTop} className="flex items-center gap-2 rounded-md px-2 py-2 transition hover:bg-slate-100/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00C8D7]/70" aria-label="개발자 문서 상단으로 이동">
+              <ProjectLogo className="h-6 w-auto object-contain" />
               <span className={`text-sm font-medium tracking-[-0.02em] ${accentClass}`}>Developers</span>
-            </Link>
+            </button>
           </div>
 
           <div className="flex items-center gap-2">
@@ -179,7 +188,7 @@ export function DesignSystemPage() {
             ))}
           </div>
 
-          <section id="top" className={`scroll-mt-24 border-b pb-10 ${dividerClass}`}>
+          <section id="top" ref={registerSection("top")} className={`scroll-mt-24 border-b pb-10 ${dividerClass}`}>
             <p className={`font-mono text-[11px] uppercase tracking-[0.16em] ${accentClass}`}>EUKK TRADE Developers</p>
             <h1 className="mt-4 text-[clamp(2.5rem,5vw,3rem)] font-semibold tracking-[-0.04em]">Official developer documentation for EUKK TRADE</h1>
             <p className={`mt-5 max-w-3xl text-base leading-7 ${mutedClass}`}>설치, 브로커 설정, 보안, FAQ, 개발자 관련 문서를 한 곳에서 관리합니다.</p>
