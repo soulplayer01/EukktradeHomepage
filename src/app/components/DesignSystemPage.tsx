@@ -106,6 +106,16 @@ export function DesignSystemPage() {
     ? "bg-[#020f0f] text-[#F2FFFB] [--background:#020f0f] [--foreground:#F2FFFB] [--card:#071416] [--card-foreground:#F2FFFB] [--popover:#071416] [--popover-foreground:#F2FFFB] [--primary:#F4F7F6] [--primary-foreground:#061514] [--secondary:#0B2021] [--secondary-foreground:#D8FFF6] [--muted:#102224] [--muted-foreground:#8AA5A1] [--accent:#123133] [--accent-foreground:#F2FFFB] [--border:rgba(255,255,255,0.1)] [--ring:rgba(0,200,215,0.7)]"
     : "bg-[#F4F7F6] text-[#06201F] [--background:#F4F7F6] [--foreground:#06201F] [--card:#FFFFFF] [--card-foreground:#06201F] [--popover:#FFFFFF] [--popover-foreground:#06201F] [--primary:#111111] [--primary-foreground:#FFFFFF] [--secondary:#EDF2F1] [--secondary-foreground:#173432] [--muted:#E4EBEA] [--muted-foreground:#607A76] [--accent:#E8EEED] [--accent-foreground:#06201F] [--border:oklch(0.74_0.02_180_/_0.5)] [--ring:oklch(0.64_0.14_190_/_0.42)]";
 
+  const headerClass = isDarkMode ? "border-white/8 bg-[#020f0f] text-[#F2FFFB]" : "border-black/8 bg-[#F4F7F6] text-[#06201F]";
+  const mutedTextClass = isDarkMode ? "text-[#D8FFF6]/62" : "text-[#06201F]/58";
+  const developerClass = isDarkMode ? "border-white/14 text-[#F2FFFB]/84" : "border-black/12 text-[#06201F]/78";
+  const controlClass = isDarkMode
+    ? "border-white/12 bg-white/6 text-[#F2FFFB] placeholder:text-[#8AA5A1] hover:bg-white/10"
+    : "border-black/10 bg-white text-[#06201F] placeholder:text-[#607A76] hover:bg-[#EDF2F1]";
+  const githubClass = isDarkMode
+    ? "border-white/24 bg-[#F2FFFB] text-[#06201F] hover:bg-[#F8FFFD]"
+    : "border-black/12 bg-[#071416] text-[#F2FFFB] hover:bg-[#102224]";
+
   const sidebarClass = isDarkMode ? "border-white/8 bg-[#020f0f]" : "border-black/8 bg-[#F4F7F6]";
   const mutedClass = isDarkMode ? "text-[#A8C7C1]" : "text-[#254441]/68";
   const accentClass = isDarkMode ? "text-[#14E3B2]" : "text-[#008A94]";
@@ -125,34 +135,41 @@ export function DesignSystemPage() {
 
   return (
     <div className={`min-h-screen transition-colors duration-200 ${pageClass}`} style={{ fontFamily: "'Inter', system-ui, -apple-system, sans-serif" }}>
-      <header className={`sticky top-0 z-50 border-b ${isDarkMode ? "border-white/8 bg-[#020f0f]" : "border-black/8 bg-[#F4F7F6]"}`}>
-        <div className="flex h-16 items-center justify-between gap-3 px-4 sm:px-5 lg:px-8">
-          <div className="flex items-center gap-3">
-            <button type="button" onClick={scrollToTop} className="flex items-center gap-2 rounded-md px-2 py-2 transition hover:bg-slate-100/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00C8D7]/70" aria-label="개발자 문서 상단으로 이동">
-              <ProjectLogo className="h-6 w-auto object-contain" />
-              <span className={`text-sm font-medium tracking-[-0.02em] ${accentClass}`}>Developers</span>
+      <header className={`sticky top-0 z-50 border-b ${headerClass}`}>
+        <nav className="flex h-14 w-full items-center justify-between gap-4 px-4 sm:h-16 sm:px-5 md:px-8">
+          <div className="flex items-center gap-2">
+            <Link to="/" className="flex items-center gap-2" aria-label="EUKK TRADE 홈페이지로 이동">
+              <ProjectLogo className="h-5 w-auto object-contain sm:h-6" />
+              <span className={`text-sm font-medium tracking-[-0.02em] sm:text-base ${mutedTextClass}`}>.com</span>
+            </Link>
+            <button
+              type="button"
+              onClick={scrollToTop}
+              className={`ml-2 border-l bg-transparent pl-3 text-sm font-medium sm:text-base ${developerClass}`}
+            >
+              Developers
             </button>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex min-w-0 items-center gap-2">
             <form onSubmit={handleSearchSubmit} className="relative hidden sm:block">
               <input
                 value={searchQuery}
                 onChange={(event) => setSearchQuery(event.target.value)}
                 placeholder="문서 검색"
-                className={`h-10 w-56 rounded-md border px-3 text-sm outline-none transition focus-visible:ring-2 focus-visible:ring-[#00C8D7]/70 ${isDarkMode ? "border-white/12 bg-white/5 text-[#F2FFFB] placeholder:text-[#8AA5A1]" : "border-black/10 bg-white text-[#06201F] placeholder:text-[#607A76]"}`}
+                className={`h-9 w-48 rounded-md border py-2 pl-3 pr-3 text-sm outline-none transition focus-visible:ring-2 focus-visible:ring-[#00C8D7]/70 md:w-64 ${controlClass}`}
               />
             </form>
             <button
               type="button"
               onClick={toggleTheme}
               aria-label={isDarkMode ? "라이트 모드로 전환" : "다크 모드로 전환"}
-              className={`inline-flex h-10 w-10 items-center justify-center rounded-md border transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00C8D7]/70 ${isDarkMode ? "border-white/12 bg-white/6 text-[#F2FFFB]" : "border-black/10 bg-white text-[#06201F]"}`}
+              className={`inline-flex h-9 w-9 items-center justify-center rounded-md border transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00C8D7]/70 sm:h-10 sm:w-10 ${controlClass}`}
             >
-              {isDarkMode ? "🌙" : "☀️"}
+              {isDarkMode ? <Sun className="h-4 w-4" aria-hidden="true" /> : <Moon className="h-4 w-4" aria-hidden="true" />}
             </button>
           </div>
-        </div>
+        </nav>
       </header>
 
       <main className="grid w-full lg:grid-cols-[260px_minmax(0,1fr)]">
