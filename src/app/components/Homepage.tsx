@@ -19,7 +19,7 @@ const guideItems = [
 const githubDownloadUrl = "https://github.com/OverDlive/AutoTrading-releases";
 
 const heroBackgroundWords = [
-  { text: "ICHIMOKU", className: "left-[-8%] top-[15%] text-[clamp(4.5rem,12vw,10rem)] motion-safe:animate-[heroFloat_18s_ease-in-out_infinite]" },
+  { text: "EUKK SEUNG SHIN", className: "left-[-8%] top-[15%] text-[clamp(4.5rem,12vw,10rem)] motion-safe:animate-[heroFloat_18s_ease-in-out_infinite]" },
   { text: "BACKTEST", className: "right-[-9%] top-[26%] hidden text-[clamp(4rem,10vw,8.5rem)] motion-safe:animate-[heroFloat_22s_ease-in-out_infinite_reverse] sm:block" },
   { text: "AUTO TRADE", className: "bottom-[20%] left-[4%] hidden text-[clamp(3.5rem,9vw,8rem)] motion-safe:animate-[heroFloat_20s_ease-in-out_infinite] md:block" },
   { text: "STRATEGY", className: "bottom-[8%] right-[2%] hidden text-[clamp(3rem,8vw,7rem)] motion-safe:animate-[heroFloat_24s_ease-in-out_infinite_reverse] lg:block" },
@@ -503,7 +503,7 @@ export function Homepage() {
               className="h-[72px] w-[72px] object-contain drop-shadow-[0_18px_44px_rgba(0,208,180,0.16)] sm:h-20 sm:w-20 md:h-24 md:w-24 lg:h-28 lg:w-28"
             />
             <h1 className="mt-7 text-[clamp(2.1rem,8vw,3.5rem)] font-semibold leading-none text-[#F2FFFB] md:mt-9 lg:mt-10">EUKK TRADE</h1>
-            <p className="mt-3 font-mono text-xs text-[#8AA5A1] sm:text-sm md:mt-4 md:text-base">ver 1.0.0</p>
+            <p className="mt-3 font-mono text-xs text-[#8AA5A1] sm:text-sm md:mt-4 md:text-base">ver 1.3.1</p>
             <a
               href={githubDownloadUrl}
               target="_blank"
@@ -517,10 +517,10 @@ export function Homepage() {
           </div>
           <div className="mx-auto mt-10 w-full max-w-[22rem] px-1 text-center sm:mt-12 sm:max-w-2xl md:mt-14 md:max-w-3xl lg:mt-8 lg:max-w-5xl">
             <h2 className="hero-headline-gradient text-[clamp(1.65rem,5vw,2.875rem)] font-extrabold leading-[1.32] md:leading-[1.28] lg:leading-[1.25]">
-              일목균형표 기반의 자동매매기를 경험해보세요
+              시장은 움직여도, 당신의 시간은 그대로
             </h2>
             <p className="mt-4 whitespace-pre-line text-base font-extrabold leading-[1.35] text-[#8AA5A1]/82 sm:text-lg md:mt-5 md:text-xl lg:text-2xl">
-              {"백테스팅부터 자동 매매까지,\n더 쉽고 직관적으로."}
+              {"한국·미국 주식을 위한 자동매매를\n하나의 플랫폼에서."}
             </p>
             <a
               href="#overview"
@@ -542,7 +542,7 @@ export function Homepage() {
               <span className="block">직관적인 흐름으로.</span>
             </h2>
             <p className="mt-6 max-w-2xl text-base leading-8 text-[#254441]/72 md:text-xl">
-              시장은 24시간 움직이고, 사람은 쉬어야 합니다. EUKK TRADE는 일목균형표 기반 전략을 백테스팅부터 자동 매매까지 연결하는 프로젝트입니다.
+              시장은 24시간 움직이고, 사람은 쉬어야 합니다. EUKK TRADE는 한국·미국 주식을 위한 자동매매 · 백테스트 데스크톱 플랫폼 입니다.
             </p>
           </div>
           <div className="min-h-[320px] rounded-lg border border-slate-900/10 bg-card/75 p-5 shadow-[0_28px_90px_rgba(15,23,42,0.12)] md:min-h-[460px]">
@@ -740,7 +740,7 @@ export function Homepage() {
                   EUKK TRADE는 개인 연구 및 개발 프로젝트입니다.
                 </p>
                 <p className="mt-2 max-w-2xl text-sm leading-6 text-[#A8C7C1] md:text-[15px]">
-                  본 사이트 및 문서는 투자 권유, 투자 자문, 금융 상품 판매를 목적으로 하지 않습니다.
+                  본 사이트 및 문서, 배포 프로그램은 투자 권유, 투자 자문, 금융 상품 판매를 목적으로 하지 않습니다.
                 </p>
                 <p className="mt-2 max-w-2xl text-sm leading-6 text-[#A8C7C1] md:text-[15px]">
                   모든 투자 판단과 책임은 이용자 본인에게 있으며, 개발자는 투자 결과에 대해 책임을 지지 않습니다.
